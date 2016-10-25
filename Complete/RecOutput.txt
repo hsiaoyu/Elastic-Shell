@@ -1,0 +1,12 @@
+Rectangular plate with slit in the middle and bend into a half cylinder
+E1=0.010129 E2=8.65937 Etot=4.33475
+
+
+Rectangular plate with slit in the middle.
+Shift to middle and stretch in X direction by 1.2*x_position
+E1=9097.11 E2=0 Etot=9097.11
+
+
+Rectangular plate with slit in the middle.
+Shift to middle and stretch in Y direction by 1.2*y_position
+E1=9097.11 E2=0 Etot=9097.11
