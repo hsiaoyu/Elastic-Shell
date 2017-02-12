@@ -5,6 +5,7 @@
 #include <cmath>
 #include <igl/readOBJ.h>
 #include <igl/readDMAT.h>
+#include <igl/writeDMAT.h>
 #include "MD_calc.h"
 using namespace std;
 using namespace Eigen;
@@ -18,8 +19,9 @@ int main (){
     igl::readOBJ("V.obj", V, F);
     MatrixXd MachineDirection(F.rows(),2);
     MachineDirection = CalcMD(GlobalMD);
-    ofstream OutFile("MDinFace.dmat");
-    OutFile << 2 << " " << F.rows() << endl << MachineDirection.transpose() << endl;
+    igl::writeDMAT("MDinFace.dmat",MachineDirection,1);
+   // ofstream OutFile("MDinFace.dmat");
+   // OutFile << 2 << " " << F.rows() << endl << MachineDirection.transpose() << endl;
    /* OutFile.close();
     cout << MachineDirection << endl;
     MatrixXd tmp;
