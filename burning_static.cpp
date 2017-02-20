@@ -5,14 +5,15 @@
 #include <cmath>
 #include <igl/per_face_normals.h>
 #include <igl/readOBJ.h>
+#include <igl/readDMAT.h>
 #include <igl/per_edge_normals.h>
 #include <igl/viewer/Viewer.h>
-#include "func_static.h"
+#include "burning_static.h"
 #include <lbfgs.h>
 using namespace std;
 using namespace Eigen;
 Matrix2d CanonM1, CanonM2, CanonM3;
-double area=0.5, constE, nu, t, delt, constS; // area of the canonical triangle, constS is the shrinkage constant
+double area=0.5, constE, nu, t, delt; // area of the canonical triangle, constS is the shrinkage constant
 MatrixXd V, Vbar, ENbar, Vfix, Ibartot;// ENbar is the edge normal of Vbar
 MatrixXi F, EdgeNV; // Eash row of EdgeNV(3*NTri,4) stores the index off the four vertices that are related to one edge
 VectorXi EdgeF;// EdgeF(3*NTri) stores the index of the  adjecent face of the edge other than the face that is indicated by the vector index 
@@ -60,7 +61,18 @@ public:
 		}
         }
 
-        int ret = lbfgs(Nvar, m_x, &fx, _evaluate, _progress, this, NULL);
+
+	// The fifth component is the maximum iternation allowed
+        lbfgs_parameter_t _defparam = {
+        6, 1e-5, 0, 1e-5,
+        50000, LBFGS_LINESEARCH_DEFAULT, 40,
+        1e-20, 1e20, 1e-4, 0.9, 0.9, 1.0e-16,
+        0.0, 0, -1,
+        };
+
+
+	// last argument=NULL uses defualt value
+        int ret = lbfgs(Nvar, m_x, &fx, _evaluate, _progress, this, &_defparam);
 
         printf("L-BFGS optimization terminated with status code = %d\n", ret);
         printf("  fx = %f, x[0] = %f, x[1] = %f\n", fx, m_x[0], m_x[1]);
@@ -159,24 +171,27 @@ int main (){
     CanonM1 << 0, 0, 0, 1;
     int i, j, tmp, NTri, Nfix;
     Vector3d Ei, Ef;
+    ifstream Infile("Input_Filename.txt");
+    string str;
+    getline(Infile,str); 
+    getline(Infile,str); 
+    getline(Infile,str); 
+    getline(Infile,str); 
+    const char *cstr = str.c_str();
+    igl::readDMAT(cstr, Ibartot);
     ifstream InFile;
-    InFile.open("fix_test.txt");
-    
-    cout << "Please enter Young's Modulus:" << endl;
-    cin >> constE;
-    cout << "Please enter the Poisson Ratio:" << endl;
-    cin >> nu;
-    cout << "Please enter the thickness:" << endl;
-    cin >> t;
-    cout << "Please enter shrinkage:" << endl;
-    cin >> constS;
-    igl::readOBJ("Vbar.obj", Vbar, F);
+    getline(Infile,str); 
+    const char *cstr2 = str.c_str();
+    InFile.open(cstr2);
+    InFile >> constE;
+    InFile >> nu;
+    InFile >> t;
+ //   igl::readOBJ("Vbar.obj", Vbar, F);
     igl::readOBJ("V.obj",V,F);
-    igl::readDMAT("Ibar.dmat", Ibartot);
     InFile >> Nfix;
     FixIndex = new int [Nfix];  //Create an array of size Nfix
     NTri=F.rows();
-    NNode=Vbar.rows();	
+    NNode=V.rows();	
     MatrixXd Vtemp(Nfix,3);
     for (i=0; i<Nfix; i++){
    	 InFile >> FixIndex[i];
@@ -190,17 +205,20 @@ int main (){
     MatrixXd FFtot(NNode,3), EN(3*NTri,3), FN(NTri,3), FNbar(NTri,3), Vnew(NNode,3);
     EdgeF=NeighborF();
     EdgeNV=VofEdgeN();
-    igl::per_face_normals(Vbar, F, FNbar);
-    ENbar=Enormal(FNbar);
+//   igl::per_face_normals(Vbar, F, FNbar);
+//    ENbar=Enormal(FNbar);
     
-   objective_function obj;
-   obj.run(3*(NNode-Nfix));
-   igl::writeOBJ("rec_UniformBurning.obj",V,F);
+    objective_function obj;
+    obj.run(3*(NNode-Nfix));
+  
+    getline(Infile,str); 
+    const char *cstr1 = str.c_str();
+    cout << cstr1 << endl;
+    igl::writeOBJ(cstr1,V,F);
    
- //  igl::viewer::Viewer viewer;
- //  viewer.data.set_mesh(V, F);
- //  viewer.launch();
-
+  // igl::viewer::Viewer viewer;
+   //viewer.data.set_mesh(V, F);
+   //viewer.launch();
 return 0;
 }
 

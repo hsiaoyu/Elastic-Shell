@@ -14,15 +14,28 @@ MatrixXi F; // Eash row of EdgeNV(3*NTri,4) stores the index off the four vertic
 VectorXi EdgeF;
 Matrix2d CanonM1, CanonM2, CanonM3;
 double area=0.5;
+
 int main (){
-    igl::readOBJ("V.obj", V, F);
-    MatrixXd MachineDirection(F.rows(),2);
-    igl::readDMAT("MDinFace.dmat", MachineDirection);
+    MatrixXd GlobalMD;
+    // Take special care with the GlobalMD.dmat format! GlobalMD should be inplane with each faces.
+    igl::readOBJ("Vbar.obj", V, F);
+    ifstream Infile("Input_Filename.txt");
+    string str;
+    getline(Infile,str); 
+    const char *cstr = str.c_str();
+    igl::readDMAT(cstr, GlobalMD);
+    MatrixXd MachineDirection(2*F.rows(),2);
+    MachineDirection = CalcMD(GlobalMD);
+    //---------------------------------------------
     VectorXd MoistureLevel(F.rows());
     // MoistureLevel stores the moist of face i in element i
-    igl::readDMAT("MoistureLevel.dmat", MoistureLevel);
+    getline(Infile,str); 
+    const char *cstr1 = str.c_str();
+    igl::readDMAT(cstr1, MoistureLevel);
     // V is the rest state of the paper and each faces should be inplane with the corresponding MD
-    ifstream InFile("calcIbar_input.txt");
+    getline(Infile,str); 
+    const char *cstr2 = str.c_str();
+    ifstream InFile(cstr2);
     double t, ShrinkCoeffMD, ShrinkCoeffCD;
     InFile >> t;
     InFile >> ShrinkCoeffMD;
@@ -33,8 +46,11 @@ int main (){
     EdgeF=NeighborF();
     MatrixXd Itot;
     Itot=CalcIbar(MachineDirection, t , ShrinkCoeffMD, ShrinkCoeffCD, MoistureLevel);
-    igl::writeDMAT("Ibar.dmat",Itot,1);
-   /* MatrixXd Icheck;
+    getline(Infile,str); 
+    const char *cstr3 = str.c_str();
+    igl::writeDMAT(cstr3,Itot,1);
+   
+/* MatrixXd Icheck;
     igl::readDMAT("Ibar.dmat", Icheck);
     cout << Itot << endl << "Check" << endl << Icheck << endl;
 */
@@ -47,32 +63,64 @@ MatrixXd CalcIbar(MatrixXd MachineDirection, double t, double ShrinkMD, double S
 	MatrixXd FN, EN, IAtot(2*NTri,2), IBtot(2*NTri,2), Itot(4*NTri,2);
     	igl::per_face_normals(V, F, FN);
     	EN=Enormal(FN);
-	Matrix2d Rot;
-	Rot << 0, -1, 1, 0;
 	for (int i=0; i<NTri; i++){
-		Matrix2d IA, IB, tmp1, tmp2, Utransform, MShrink;
-		double c1, c2, ctemp;
+		Matrix2d IA, IB, tmp1, tmp2, U, Utransform, MShrink;
+		double c1, c2, c3, ctemp;
 		Vector2d MD, CD;
 		IB=I2(V.row(F(i,0)),V.row(F(i,1)),V.row(F(i,2)),EN.row(3*i),EN.row(3*i+1),EN.row(3*i+2));
 		IA=I1(V.row(F(i,0)),V.row(F(i,1)),V.row(F(i,2)));
-		tmp1=IA+t*IB/2;
-		tmp2=IA-t*IB/2;
-		MD<<MachineDirection(i,0),MachineDirection(i,1);
-		CD=Rot*MD;
+		tmp1=IA+t*IB;
+		tmp2=IA-t*IB;
+		//Canonical e1=(1,0), e2=(-1,1)
+		MD<<MachineDirection(i,0)-MachineDirection(i,1),MachineDirection(i,1);
+		CD<<MachineDirection(i+NTri,0)-MachineDirection(i+NTri,1),MachineDirection(i+NTri,1);
 		ctemp=MD.transpose()*tmp1*MD;
-		c1=ShrinkMD*MoistureLevel(i)*ctemp;
+		c1=(1.0-ShrinkMD*MoistureLevel(i))*(1.0-ShrinkMD*MoistureLevel(i))*ctemp;
+		ctemp=CD.transpose()*tmp1*MD;
+		c2=(1.0-ShrinkCD*MoistureLevel(i))*(1.0-ShrinkMD*MoistureLevel(i))*ctemp;
 		ctemp=CD.transpose()*tmp1*CD;
-		c2=ShrinkCD*MoistureLevel(i)*ctemp;
+		c3=(1.0-ShrinkCD*MoistureLevel(i))*(1.0-ShrinkCD*MoistureLevel(i))*ctemp;
 		//c2=ShrinkCD*CD.transpose()*tmp1*CD*MoistureLevel(i);
-		Utransform << MD(0), MD(1), CD(0), CD(1); 
+		U << MD(0), CD(0), MD(1), CD(1);
+		Utransform=U.inverse(); 
 		//Utransform *= 1/(MD(0)*CD(1)-MD(1)*CD(0));
-		MShrink << c1, 0, 0, c2;
+		MShrink << c1, c2, c2, c3;
 		tmp1= Utransform.transpose()*MShrink*Utransform;
 		IAtot.block(2*i,0,2,2)=0.5*(tmp1+tmp2);
 		IBtot.block(2*i,0,2,2)=0.5*(tmp1-tmp2)/t;
 	}
 	Itot << IAtot, IBtot;
 	return Itot;
+}
+
+//CalcMD calculates GlobalMD in barycentric coordinate in each face
+MatrixXd CalcMD(MatrixXd GlobalMD){
+	Vector3d e1, e2;
+	Matrix2d A;
+	MatrixXd MD(2*F.rows(),2);
+        Vector2d GMD,GCD;
+//	GMD is defined as follow if MD is uniform throughout the paper
+	GMD << GlobalMD(0,0), GlobalMD(0,1);
+        Matrix2d Rot;
+	Rot << 0,-1,1,0;
+        GCD = Rot*GMD;
+	for (int i=0 ; i<F.rows(); i++){
+        /*	// If MD is not uniform throughout the paper use the below definition for GMD
+		GMD << GlobalMD(i,0), GlobalMD(i,1);
+	*/
+		e1 = V.row(F(i,1))-V.row(F(i,0));
+        	e2 = V.row(F(i,2))-V.row(F(i,1));
+		A << e2(1), -e2(0), -e1(1), e1(0);
+		A *= 1/(e1(0)*e2(1)-e1(1)*e2(0));
+		Vector2d tmp1, tmp2;
+		tmp1 = A*GMD;
+                tmp2 = A*GCD;
+		// MD is normalized so that IAbar would be easier to calculate by unitary transform
+		MD.row(i) = tmp1.transpose()/tmp1.norm();
+		MD.row(i+F.rows()) = tmp2.transpose()/tmp2.norm();
+//		cout << MD(i,0)*e1+MD(i,1)*e2 << endl << "GMD" << endl <<  GMD << " " << GlobalMD(0,2) << endl;
+	}
+	return MD;
 }
 
 Matrix2d I1(Vector3d v1d, Vector3d v2d, Vector3d v3d){

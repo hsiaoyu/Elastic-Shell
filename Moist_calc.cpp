@@ -11,7 +11,7 @@ using namespace Eigen;
 MatrixXd V;// ENbar is the edge normal of Vbar
 MatrixXi F; // Eash row of EdgeNV(3*NTri,4) stores the index off the four vertices that are related to one edge
 int main (){
-    igl::readOBJ("V.obj", V, F);
+    igl::readOBJ("Vbar.obj", V, F);
     VectorXd Moisture(F.rows());
     double moist;
     cout << "What is the uniform moisture difference(%):" << endl;
@@ -19,6 +19,6 @@ int main (){
     for(int i=0; i< F.rows(); i++){
 	Moisture(i)=moist;
     }    
-    igl::writeDMAT("MoistureLevel.dmat",Moisture,1);
+    igl::writeDMAT("Input_MoistureLevel.dmat",Moisture,1);
     return 0;
 }
