@@ -1,0 +1,23 @@
+This is the read me for shell_statics(2).cpp
+
+shell_statics(2).cpp reads in three files:
+1. Vbar.obj: The rest configuration of the thin shell
+2. V.obj : The initial guess of the deformed shell
+3. fix_index.txt: this file should contained the total number and the index of fixed vertices and those vertices won't be updated, just put down zero if there is no fixed vertices
+
+shell_static.cpp deals with fixed boundary conditions.
+shell_static2.cpp deals with unbalanced surface area problem, where shrinkage refers to the shrinkage of top surface with the mid surface. 
+
+The purpose of this code is to simulate the rest configuration of the thin under certain specified conditions.
+
+
+# Below is the read me for burning_static.cpp
+Input file : all files contain in Input_Filename.txt
+
+Input_GlobalMD.dmat            : Define the Global MD inside the shell 
+Input_MoistureLevel.dmat       : Define the moisture level on each face, could be calculated using Moist_calc.cpp
+Input_calcIbar.txt             : The first line is the thickness, 2nd is the shrinking coefficient of MD, 3rd is the shrinking coefficient of CD
+Ibar.damt                      : This should be calculted by Ibar_calc.cpp, please make sure that Vbar.obj is the rest configuration we're solving for
+Input_burning_static.txt       : The first line is the Young's Modules, 2nd is Poisson Ratio, 3rd is Thickness and should be consistent with the value in Input_calcIbar.txt
+                                 4th line is # of fixed particles, below : Index(?) of the fixed particles
+RecUni.obj                     : Output configuration

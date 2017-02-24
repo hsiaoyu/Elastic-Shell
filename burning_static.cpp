@@ -216,9 +216,9 @@ int main (){
     cout << cstr1 << endl;
     igl::writeOBJ(cstr1,V,F);
    
-  // igl::viewer::Viewer viewer;
-   //viewer.data.set_mesh(V, F);
-   //viewer.launch();
+    igl::viewer::Viewer viewer;
+    viewer.data.set_mesh(V, F);
+    viewer.launch();
 return 0;
 }
 
@@ -328,7 +328,7 @@ MatrixXd Force(){
                //cout << FF1 << endl << FF2 << endl;
 	}
 	C=-1/(8*area*area);
-	FF2=C*FF2;
+	FF2=-C*FF2;
 	//FF<<FF1,FF2;
 	FF = FF1+FF2;
 	return FF;
@@ -486,9 +486,9 @@ Matrix2d I2(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d n1, Vector3d n2, Vec
 	e1=v2-v1;
 	e2=v3-v2;
 	e3=v1-v3;
-	q1=2*e1.dot(n3-n2);
-	q2=2*e2.dot(n1-n3);
-	q3=2*e3.dot(n2-n1);
+	q1=2*e1.dot(n2-n3);
+	q2=2*e2.dot(n3-n1);
+	q3=2*e3.dot(n1-n2);
 	I=QMatrix(q1,q2,q3);
 	return I;
 }
