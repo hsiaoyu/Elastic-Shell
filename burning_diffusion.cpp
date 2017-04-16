@@ -5,22 +5,24 @@
 #include <igl/per_face_normals.h>
 #include <igl/readOBJ.h>
 #include <igl/readDMAT.h>
+#include <igl/writeDMAT.h>
 #include <igl/viewer/Viewer.h>
 #include <igl/per_edge_normals.h>
 #include "burning_diffusion.h"
 using namespace std;
 using namespace Eigen;
 Matrix2d CanonM1, CanonM2, CanonM3;
-double area=0.5, constE, nu, t, delt, ShrinkCoeffMD, ShrinkCoeffCD, rho, DiffusionCoeff; // area of the canonical triangle
-MatrixXd velocity, V, Ibartot, MachineDirection;// ENbar is the edge normal of Vbar
+double area=0.5, constE, nu, t, delt, ShrinkCoeffMD, ShrinkCoeffCD, rho, DiffusionCoeff, cdamp; // area of the canonical triangle
+MatrixXd velocity, V, Vbar, ENbar, Ibartot, MachineDirection, IAold;// ENbar is the edge normal of Vbar
 MatrixXi F, EdgeNV; // Eash row of EdgeNV(3*NTri,4) stores the index off the four vertices that are related to one edge
 VectorXi EdgeF;// EdgeF(3*NTri) stores the index of the  adjecent face of the edge other than the face that is indicated by the vector index 
-int NNode, gflag, tcount, storefreq, maxcount; // NNode is the total # of nodes
+int NNode, gflag, tcount, storefreq, maxcount, InitialNum; // NNode is the total # of nodes
 Vector3d V_ini1, V_ini2; // Vini1, Vini2 are the fixed points of V when enabled gravity
-VectorXd Moisture_v;
+VectorXd Moisture_v, Mass;
 SparseMatrix<double> Mtot_Mass, Mtot_Stiffness;
 MatrixXd Vtime; // Vtime stores the vertices at each time 
-
+string objname, moistname;
+bool DampingForce_Enabled;
 int main(){
         CanonM3 << 1, 0, 0, 0;
         CanonM2 << 1, 1, 1 ,1;
@@ -37,6 +39,8 @@ int main(){
         // Moisture_v(i) stores the moist of vertice i and Moisture_v(i+NNode) stores the value for the corresponding lower surface
         getline(Infile,str); 
         const char *cstr1 = str.c_str();
+        getline(Infile,objname); 
+        getline(Infile,moistname); 
         igl::readDMAT(cstr1, Moisture_v);
         Infile >> constE;
         Infile >> nu;
@@ -48,22 +52,31 @@ int main(){
         Infile >> ShrinkCoeffMD;
         Infile >> ShrinkCoeffCD;
 	Infile >> DiffusionCoeff;
+	Infile >> DampingForce_Enabled;
+	Infile >> cdamp;
 	Infile >> storefreq; // The frequency of storing V to Vtime for animation
 	Infile >> maxcount; // Must be a multiple of storefreq
+	Infile >> InitialNum; // staring file number for recording the animation 
         igl::readOBJ("V_animation.obj",V,F);
-	//igl::readOBJ("Vbar_animation.obj",Vbar,F);
+	igl::readOBJ("Vbar_animation.obj",Vbar,F);
         MachineDirection = CalcMD(GlobalMD);
 	NTri=F.rows();
 	NNode=V.rows();	
         EdgeF=NeighborF(); 
         EdgeF=NeighborF();
         EdgeNV=VofEdgeN();
-        //igl::per_face_normals(Vbar, F, FNbar);
-        //ENbar=Enormal(FNbar);
+        Mass = VMass();
+        MatrixXd FNbar(NTri,3);
+	igl::per_face_normals(Vbar, F, FNbar);
+        ENbar=Enormal(FNbar);
         velocity.setZero(NNode,3);
         //CalcIbar();
+	Mtot_Mass=Mass_Total();
+    	Mtot_Stiffness=Stiffness_Total();
+    	Mtot_Stiffness*=DiffusionCoeff;
         
-        tcount =0; // Total time step
+        IAold.resize(2*NTri,2);
+	tcount =0; // Total time step
 	igl::viewer::Viewer viewer;
         viewer.data.set_mesh(V, F);
         viewer.core.is_animating = true;
@@ -77,16 +90,18 @@ int main(){
 void CalcIbar(){
 	int NTri = F.rows();
 	MatrixXd IAtot(2*NTri,2), IBtot(2*NTri,2), Itot(4*NTri,2),FN(NTri,3), EN(3*NTri,3);
-	igl::per_face_normals(V, F, FN);
-	EN=Enormal(FN);
+//	igl::per_face_normals(V, F, FN);
+//	EN=Enormal(FN);
 	for (int i=0; i<NTri; i++){
 		Matrix2d IA, IB, tmp1, tmp2, U, Utransform, MShrink;
 		double c1, c2, c3, ctemp, MoistureLevel;
 		Vector2d MD, CD;
 		// Moisture level on a face is defined by averaging the moisture on the three vertices
 		MoistureLevel=(double)(Moisture_v(F(i,0))+Moisture_v(F(i,1))+Moisture_v(F(i,2)))/3;
-		IB=I2(V.row(F(i,0)),V.row(F(i,1)),V.row(F(i,2)),EN.row(3*i),EN.row(3*i+1),EN.row(3*i+2));
-		IA=I1(V.row(F(i,0)),V.row(F(i,1)),V.row(F(i,2)));
+		IB=I2(Vbar.row(F(i,0)),Vbar.row(F(i,1)),Vbar.row(F(i,2)),ENbar.row(3*i),ENbar.row(3*i+1),ENbar.row(3*i+2));
+		IA=I1(Vbar.row(F(i,0)),Vbar.row(F(i,1)),Vbar.row(F(i,2)));
+		//IB=I2(V.row(F(i,0)),V.row(F(i,1)),V.row(F(i,2)),EN.row(3*i),EN.row(3*i+1),EN.row(3*i+2));
+		//IA=I1(V.row(F(i,0)),V.row(F(i,1)),V.row(F(i,2)));
 		tmp1=IA+t*IB;
 		tmp2=IA-t*IB;
 		//Canonical e1=(1,0), e2=(-1,1)
@@ -155,14 +170,17 @@ bool pre_draw(igl::viewer::Viewer& viewer){
 		//Vtime.conservativeResize(Vtime.rows()+NNode,3);
 		//Vtime.block(tcount/storefreq*NNode,0,NNode,3)=V;
 		stringstream FileName;
-		FileName <<"burning_diffusion_" << tcount/storefreq << ".obj"; 
+		FileName << objname << tcount/storefreq+InitialNum << ".obj"; 
 		igl::writeOBJ(FileName.str(),V,F);
+		FileName.str("");
+		FileName << moistname << tcount/storefreq+InitialNum << ".dmat"; 
+		igl::writeDMAT(FileName.str(),Moisture_v,1);
 	}
-	tcount++;
 	//if (tcount == maxcount){
 	//	igl::writeOBJ("Vtime.obj",Vtime,F);
 	//}
 	Sim();
+	tcount++;
         viewer.data.clear();
     	viewer.data.set_mesh(V, F);
     	viewer.core.align_camera_center(V,F);
@@ -174,15 +192,9 @@ void Sim(){
         VectorXd gravity(NNode);
         gravity.setConstant(100*delt);
 	int j;
-	VectorXd Mass(NNode);
-        // update rho maybe????????????????????????????????
-        Mass = VMass();
+	V+=velocity*delt;
 	// Mtot_Mass is the mass matrix and Mtot_Stiffness is the stiffness matrix
 	// Should update Mtot_Mass and Mtot_Stiffness correspondingly during simulation based on updated V
-	Mtot_Mass=Mass_Total();
-    	Mtot_Stiffness=Stiffness_Total();
-    	Mtot_Stiffness*=DiffusionCoeff;
-        diffusion_prism();
 	CalcIbar();
         MatrixXd FFtot;
         FFtot=Force();
@@ -192,7 +204,11 @@ void Sim(){
                  velocity.col(1)-=gravity;
 	     }
 	}
-	V+=velocity*delt;
+	// Update the Moisture
+	//Mtot_Mass=Mass_Total();
+    	//Mtot_Stiffness=Stiffness_Total();
+    	//Mtot_Stiffness*=DiffusionCoeff;
+        diffusion_prism();
         // Fix a few vertices from moving
         if (gflag==1){
  	    V.row(180)=V_ini1;
@@ -260,12 +276,13 @@ MatrixXd Force(){
 	int i, j, k, NTri;
 	double c1, c2, C, dval;
 	NTri=F.rows();
-	MatrixXd dN, dI(18,2), Tr(2,3), FF(NNode,3), FF2(NNode,3), FF1(NNode,3), FN(NTri,3), EN(3*NTri,3);
+	MatrixXd dN, dI(18,2), Tr(2,3), FF(NNode,3), FF2(NNode,3), FF1(NNode,3), FN(NTri,3), EN(3*NTri,3), FDamp(NNode,3);
 	igl::per_face_normals(V, F, FN);
 	EN=Enormal(FN);	
 	dN=dEnormM(); //dN is the derivative of egde normal w.r.t. the four vectices cooresponding to the edge
         FF2.setZero();
 	FF1.setZero();
+	FDamp.setZero();
 	for (i=0; i<NTri; i++) {
 		Ed << V.row(F(i,1))-V.row(F(i,0)), V.row(F(i,2))-V.row(F(i,1)), V.row(F(i,0))-V.row(F(i,2)); //Ed.row(i) is the ith  edge vector for deformed triangle
 		C=constE/(1-nu*nu);
@@ -300,11 +317,24 @@ MatrixXd Force(){
 			}	
 		}
                //cout << FF1 << endl << FF2 << endl;
+               //Calculate Damping Force 
+               if(DampingForce_Enabled && tcount >0){
+		Matrix2d ADamp;
+		ADamp = Inv*(IA-IAold.block(2*i,0,2,2));
+		for (j=0; j<3; j++){
+			for(k=0; k<3; k++){
+				tmp=Inv*dI.block(6*j+2*k,0,2,2);
+				FDamp(F(i,j),k)+=-6*t*cdamp*(c1*ADamp.trace()*tmp.trace()+c2*(ADamp*tmp).trace())/delt; // Damping force for the streching energy
+			}	
+		}
+	       }
+		IAold.block(2*i,0,2,2)=IA;
 	}
 	C=-1/(8*area*area);
 	FF2=-C*FF2;
 	//FF<<FF1,FF2;
-	FF = FF1+FF2;
+	FF = FF1+FF2+FDamp;
+	//cout << "FF1" << endl << FF1 << endl << "FF2" << endl << FF2 << endl << "FDamp" << endl << FDamp << endl;
 	return FF;
 }
 
@@ -494,7 +524,6 @@ Matrix3d rMatrix(Vector3d e1, Vector3d e2){
 
 //Diffusion in 3D using a prism element
 void diffusion_prism(){
-	cout << Moisture_v << endl;
 	SparseQR<SparseMatrix<double>, COLAMDOrdering<int> > solver;
 	solver.compute(Mtot_Mass/delt+Mtot_Stiffness);
 	if(solver.info()!=Success) {
@@ -509,9 +538,9 @@ void diffusion_prism(){
 Matrix3d M_Jacobian(int i){
 	Matrix3d J;
 	Vector3d v1,v2,v3,n;
-	v1=V.row(F(i,0));
-	v2=V.row(F(i,1));
-	v3=V.row(F(i,2));
+	v1=Vbar.row(F(i,0));
+	v2=Vbar.row(F(i,1));
+	v3=Vbar.row(F(i,2));
 	n = ((v2-v1).cross(v3-v1)).normalized();
 	J << -v1(0)+v2(0), -v1(0)+v3(0), 0, -v1(1)+v2(1), -v1(1)+v3(1), 0, -v1(2)+v2(2), -v1(2)+v3(2), 0;
 	J.col(2)= t*n/2;
