@@ -56,7 +56,7 @@ int main(){
 	Infile >> cdamp;
 	Infile >> storefreq; // The frequency of storing V to Vtime for animation
 	Infile >> maxcount; // Must be a multiple of storefreq
-	Infile >> InitialNum; // staring file number for recording the animation 
+	Infile >> InitialNum; // starting file number for recording the animation 
         igl::readOBJ("V_animation.obj",V,F);
 	igl::readOBJ("Vbar_animation.obj",Vbar,F);
         MachineDirection = CalcMD(GlobalMD);
@@ -74,7 +74,6 @@ int main(){
 	Mtot_Mass=Mass_Total();
     	Mtot_Stiffness=Stiffness_Total();
     	Mtot_Stiffness*=DiffusionCoeff;
-        
         IAold.resize(2*NTri,2);
 	tcount =0; // Total time step
 	igl::viewer::Viewer viewer;
@@ -310,10 +309,13 @@ MatrixXd Force(){
 			FF2.row(F(i,j))+= 2*pow(t,3)*(c1*(Tr(0,j)-Tr(0,(j+1)%3)-Tr(0,(j+2)%3))+c2*(Tr(1,j)-Tr(1,(j+1)%3)-Tr(1,(j+2)%3)))*dval3;// dQ(j)(dV(j))
 			FF2.row(F(i,(j+1)%3))+= -2*pow(t,3)*(c1*(Tr(0,j)-Tr(0,(j+1)%3)-Tr(0,(j+2)%3))+c2*(Tr(1,j)-Tr(1,(j+1)%3)-Tr(1,(j+2)%3)))*dval3;//dQ(j)(dV(j+1))
 		}
+		MatrixXd Ftemp(NNode,3);
+		Ftemp.setZero();
 		for (j=0; j<3; j++){
 			for(k=0; k<3; k++){
 				tmp=Inv*dI.block(6*j+2*k,0,2,2);
 				FF1(F(i,j),k)+=-6*t*(c1*A.trace()*tmp.trace()+c2*(A*tmp).trace()); // Force due to the fisrt fundamental term
+				Ftemp(F(i,j),k)+=-6*t*(c1*A.trace()*tmp.trace()+c2*(A*tmp).trace()); // Force due to the fisrt fundamental term
 			}	
 		}
                //cout << FF1 << endl << FF2 << endl;
@@ -334,7 +336,7 @@ MatrixXd Force(){
 	FF2=-C*FF2;
 	//FF<<FF1,FF2;
 	FF = FF1+FF2+FDamp;
-	//cout << "FF1" << endl << FF1 << endl << "FF2" << endl << FF2 << endl << "FDamp" << endl << FDamp << endl;
+        cout << "FF1" << endl << FF1 << endl << "FF2" << endl << FF2 << endl << "FDamp" << endl << FDamp << endl;
 	return FF;
 }
 
@@ -528,7 +530,6 @@ void diffusion_prism(){
 	solver.compute(Mtot_Mass/delt+Mtot_Stiffness);
 	if(solver.info()!=Success) {
   		// decomposition failed
-	   cout << "Solve Error!" << endl;
   	   return;
         }
 	Moisture_v = solver.solve(Mtot_Mass*Moisture_v/delt);	
