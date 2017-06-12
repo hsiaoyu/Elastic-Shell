@@ -12,13 +12,13 @@
 using namespace std;
 using namespace Eigen;
 Matrix2d CanonM1, CanonM2, CanonM3;
-double area=0.5, constE, nu, t, delt, ShrinkCoeffMD, ShrinkCoeffCD, rho, DiffusionCoeff, cdamp; // area of the canonical triangle
+double area=0.5, constE, nu, t, delt, ShrinkCoeffMD, ShrinkCoeffCD, rho, Dissipation, DiffusionCoeff, cdamp; // area of the canonical triangle
 MatrixXd velocity, V, Vbar, ENbar, Ibartot, MachineDirection, IAold;// ENbar is the edge normal of Vbar
 MatrixXi F, EdgeNV; // Eash row of EdgeNV(3*NTri,4) stores the index off the four vertices that are related to one edge
 VectorXi EdgeF;// EdgeF(3*NTri) stores the index of the  adjecent face of the edge other than the face that is indicated by the vector index 
 int NNode, gflag, tcount, storefreq, maxcount, InitialNum; // NNode is the total # of nodes
 Vector3d V_ini1, V_ini2; // Vini1, Vini2 are the fixed points of V when enabled gravity
-VectorXd Moisture_v, Mass;
+VectorXd Moisture_v, RHS_F, Mass;
 SparseMatrix<double> Mtot_Mass, Mtot_Stiffness;
 MatrixXd Vtime; // Vtime stores the vertices at each time 
 string objname, moistname;
@@ -52,6 +52,7 @@ int main(){
         Infile >> ShrinkCoeffMD;
         Infile >> ShrinkCoeffCD;
 	Infile >> DiffusionCoeff;
+	Infile >> Dissipation;
 	Infile >> DampingForce_Enabled;
 	Infile >> cdamp;
 	Infile >> storefreq; // The frequency of storing V to Vtime for animation
@@ -70,7 +71,7 @@ int main(){
 	igl::per_face_normals(Vbar, F, FNbar);
         ENbar=Enormal(FNbar);
         velocity.setZero(NNode,3);
-        //CalcIbar();
+        RHS_F = F_Total();
 	Mtot_Mass=Mass_Total();
     	Mtot_Stiffness=Stiffness_Total();
     	Mtot_Stiffness*=DiffusionCoeff;
@@ -101,12 +102,13 @@ void CalcIbar(){
 		IA=I1(Vbar.row(F(i,0)),Vbar.row(F(i,1)),Vbar.row(F(i,2)));
 		//IB=I2(V.row(F(i,0)),V.row(F(i,1)),V.row(F(i,2)),EN.row(3*i),EN.row(3*i+1),EN.row(3*i+2));
 		//IA=I1(V.row(F(i,0)),V.row(F(i,1)),V.row(F(i,2)));
-		tmp1=IA+t*IB;
+//	Remove MD CD for now
+ 		tmp1=IA+t*IB;
 		tmp2=IA-t*IB;
 		//Canonical e1=(1,0), e2=(-1,1)
 		MD<<MachineDirection(i,0)-MachineDirection(i,1),MachineDirection(i,1);
 		CD<<MachineDirection(i+NTri,0)-MachineDirection(i+NTri,1),MachineDirection(i+NTri,1);
-		ctemp=MD.transpose()*tmp1*MD;
+		/*ctemp=MD.transpose()*tmp1*MD;
 		c1=(1.0-ShrinkCoeffMD*MoistureLevel)*(1.0-ShrinkCoeffMD*MoistureLevel)*ctemp;
 		ctemp=CD.transpose()*tmp1*MD;
 		c2=(1.0-ShrinkCoeffCD*MoistureLevel)*(1.0-ShrinkCoeffMD*MoistureLevel)*ctemp;
@@ -116,6 +118,7 @@ void CalcIbar(){
 		Utransform=U.inverse(); 
 		//Utransform *= 1/(MD(0)*CD(1)-MD(1)*CD(0));
 		MShrink << c1, c2, c2, c3;
+		cout << "(i,1)" << endl << MShrink << endl;
 		tmp1= Utransform.transpose()*MShrink*Utransform;
 		// Calculate I for the lower surface
                 ctemp=MD.transpose()*tmp2*MD;
@@ -126,10 +129,45 @@ void CalcIbar(){
 		ctemp=CD.transpose()*tmp2*CD;
 		c3=(1.0-ShrinkCoeffCD*MoistureLevel)*(1.0-ShrinkCoeffCD*MoistureLevel)*ctemp;
 		MShrink << c1, c2, c2, c3;
+		cout << "(i,2)" << endl << MShrink << endl;
 		tmp2= Utransform.transpose()*MShrink*Utransform;
-		IAtot.block(2*i,0,2,2)=0.5*(tmp1+tmp2);
-		IBtot.block(2*i,0,2,2)=0.5*(tmp1-tmp2)/t;
+		*/
+		
+		c1=(1.0-ShrinkCoeffMD*MoistureLevel)*(1.0-ShrinkCoeffMD*MoistureLevel);
+		c2=(1.0-ShrinkCoeffCD*MoistureLevel)*(1.0-ShrinkCoeffCD*MoistureLevel);
+		U << MD(0), CD(0), MD(1), CD(1);
+		MShrink << c1, 0, 0, c2;
+		Utransform=U.inverse();
+		Matrix2d T;
+		T = U*MShrink*Utransform; 
+		//cout << i << endl << T << endl;
+		tmp1 = T.transpose()*tmp1*T;
+		tmp2 = T.transpose()*tmp2*T;
+		Matrix2d IAbarnew, IBbarnew;
+		IAbarnew = (tmp1+tmp2)/2;
+		IBbarnew = (tmp1-tmp2)/(2*t);
+
+		IAtot.block(2*i,0,2,2)=IAbarnew;
+		IBtot.block(2*i,0,2,2)=IBbarnew;
+		
+		/* // Sometimes with a bad mesh there would be a slight discrepancy between IAbarnew and IA even with moisture 
+ * 		// difference is zero. Below is the test code for the discrepancy.  
+		if ((IAbarnew-IA).lpNorm<Infinity>() > 1e-16){
+		cout << i << endl;
+		cout << F(i,0) << " " << F(i,1) << " " << F(i,2) << endl;
+		cout <<"IA" << endl << IAbarnew -IA << endl;
+		}
+		if ((IBbarnew-IB).lpNorm<Infinity>() > 1e-16){
+		cout << i << endl;
+		cout << F(i,0) << " " << F(i,1) << " " << F(i,2) << endl;
+		cout <<"IB" << endl << IBbarnew -IB << endl;
+		}
+		*/
+		//IAtot.block(2*i,0,2,2)=IA;
+		//IBtot.block(2*i,0,2,2)=IB;
+		
 	}
+
 	Itot << IAtot, IBtot;
 	Ibartot = Itot;
 }
@@ -175,10 +213,9 @@ bool pre_draw(igl::viewer::Viewer& viewer){
 		FileName << moistname << tcount/storefreq+InitialNum << ".dmat"; 
 		igl::writeDMAT(FileName.str(),Moisture_v,1);
 	}
-	//if (tcount == maxcount){
-	//	igl::writeOBJ("Vtime.obj",Vtime,F);
-	//}
+        //if (tcount <1){
 	Sim();
+        //}
 	tcount++;
         viewer.data.clear();
     	viewer.data.set_mesh(V, F);
@@ -272,7 +309,7 @@ MatrixXd Force(){
 	RowVector3d dval1, dval2, dval3;
 	Matrix2d IA, IAbar, A, IB, IBbar, B, Rot, tmp, Inv;
 	Matrix3d Ed;
-	int i, j, k, NTri;
+	int i, NTri;
 	double c1, c2, C, dval;
 	NTri=F.rows();
 	MatrixXd dN, dI(18,2), Tr(2,3), FF(NNode,3), FF2(NNode,3), FF1(NNode,3), FN(NTri,3), EN(3*NTri,3), FDamp(NNode,3);
@@ -293,11 +330,11 @@ MatrixXd Force(){
 		IBbar=Ibartot.block(2*(i+F.rows()),0,2,2);
 		Inv=IAbar.inverse();
                 B=Inv*(IB-IBbar);
-		A=Inv*(IA-IAbar);	
+		A=Inv*(IA-IAbar);
 		dI=DelI(V.row(F(i,0)),V.row(F(i,1)),V.row(F(i,2)));
 		Tr << B.trace()*(Inv*CanonM1).trace(), B.trace()*(Inv*CanonM2).trace(), B.trace()*(Inv*CanonM3).trace(), (B*Inv*CanonM1).trace(), (B*Inv*CanonM2).trace(), (B*Inv*CanonM3).trace();
-		for (j=0; j<3; j++){
-			for (k=0; k<4; k++){
+		for (int j=0; j<3; j++){
+			for (int k=0; k<4; k++){
 				if (EdgeNV(3*i+j,k)!=-1){
 					dval1=2*Ed.row((j+1)%3)*dN.block(9*i+3*j,3*k,3,3);	// orginate from the term 2<dn(j),e(j+1)>, dn(j)(dV(EdgeNV(j,k)))
 					dval2=-2*Ed.row((j+2)%3)*dN.block(9*i+3*j,3*k,3,3); // originate form the term -2<dn(j),e(j-1)>
@@ -309,13 +346,18 @@ MatrixXd Force(){
 			FF2.row(F(i,j))+= 2*pow(t,3)*(c1*(Tr(0,j)-Tr(0,(j+1)%3)-Tr(0,(j+2)%3))+c2*(Tr(1,j)-Tr(1,(j+1)%3)-Tr(1,(j+2)%3)))*dval3;// dQ(j)(dV(j))
 			FF2.row(F(i,(j+1)%3))+= -2*pow(t,3)*(c1*(Tr(0,j)-Tr(0,(j+1)%3)-Tr(0,(j+2)%3))+c2*(Tr(1,j)-Tr(1,(j+1)%3)-Tr(1,(j+2)%3)))*dval3;//dQ(j)(dV(j+1))
 		}
-		MatrixXd Ftemp(NNode,3);
-		Ftemp.setZero();
-		for (j=0; j<3; j++){
-			for(k=0; k<3; k++){
+		for (int j=0; j<3; j++){
+			for(int k=0; k<3; k++){
 				tmp=Inv*dI.block(6*j+2*k,0,2,2);
 				FF1(F(i,j),k)+=-6*t*(c1*A.trace()*tmp.trace()+c2*(A*tmp).trace()); // Force due to the fisrt fundamental term
-				Ftemp(F(i,j),k)+=-6*t*(c1*A.trace()*tmp.trace()+c2*(A*tmp).trace()); // Force due to the fisrt fundamental term
+		
+                /*if((A*tmp).trace()>0.000001){
+		cout << "Vertex " << F(i,j) << " " << k << " direction" << endl << "tcount " << tcount << endl;
+	        cout << "A " << endl << A << endl << "Inv" << endl << Inv << endl;
+         	cout << "IA-IAbar_" << endl << IA-IAbar << endl;
+         	}
+		*/
+                
 			}	
 		}
                //cout << FF1 << endl << FF2 << endl;
@@ -323,10 +365,11 @@ MatrixXd Force(){
                if(DampingForce_Enabled && tcount >0){
 		Matrix2d ADamp;
 		ADamp = Inv*(IA-IAold.block(2*i,0,2,2));
-		for (j=0; j<3; j++){
-			for(k=0; k<3; k++){
+		for (int j=0; j<3; j++){
+			for(int k=0; k<3; k++){
 				tmp=Inv*dI.block(6*j+2*k,0,2,2);
-				FDamp(F(i,j),k)+=-6*t*cdamp*(c1*ADamp.trace()*tmp.trace()+c2*(ADamp*tmp).trace())/delt; // Damping force for the streching energy
+		// FDamp should be divived by delt since it is related to the strain rate, however we absorb the term into cdamp
+				FDamp(F(i,j),k)+=-6*t*cdamp*(c1*ADamp.trace()*tmp.trace()+c2*(ADamp*tmp).trace()); // Damping force for the streching energy
 			}	
 		}
 	       }
@@ -334,10 +377,17 @@ MatrixXd Force(){
 	}
 	C=-1/(8*area*area);
 	FF2=-C*FF2;
-	//FF<<FF1,FF2;
-	FF = FF1+FF2+FDamp;
-        cout << "FF1" << endl << FF1 << endl << "FF2" << endl << FF2 << endl << "FDamp" << endl << FDamp << endl;
-	return FF;
+	//TODO: Check the direction of FDamp
+        FF = FF1+FF2-FDamp;
+        //cout << "tcount " << tcount << endl;
+        //cout << "Vertex 6" << FF1.row(6) << endl;
+        //cout << "Vertex 303" << FF1.row(303) << endl;
+        //cout << "Vertex 363" << FF1.row(363) << endl;
+        //cout << "FF1" << endl << FF1 << endl;
+        //cout << "FF2" << endl << FF2 << endl;
+	//cout << "FDamp" << endl << -FDamp << endl;
+        //cout << "FF" << endl << FF << endl;
+        return FF;
 }
 
 MatrixXd DelI(Vector3d v1, Vector3d v2, Vector3d v3){ // return delta I w.r.t to the change in Vi, V2, V3
@@ -532,7 +582,7 @@ void diffusion_prism(){
   		// decomposition failed
   	   return;
         }
-	Moisture_v = solver.solve(Mtot_Mass*Moisture_v/delt);	
+	Moisture_v = solver.solve(Mtot_Mass*Moisture_v/delt+RHS_F);	
 }
 
 // Calculate the Jacobian matrix of Face i
@@ -546,6 +596,37 @@ Matrix3d M_Jacobian(int i){
 	J << -v1(0)+v2(0), -v1(0)+v3(0), 0, -v1(1)+v2(1), -v1(1)+v3(1), 0, -v1(2)+v2(2), -v1(2)+v3(2), 0;
 	J.col(2)= t*n/2;
 	return J; 
+}
+
+//Calculate the RHS of the diffusion eq. with constant rate of dissipation on the top surface
+Vector6d UniTopF_prism(int i){
+	Vector6d RHS_v;
+	RHS_v << 1.0/6, 1.0/6, 1.0/6, 0, 0, 0;
+	return M_Jacobian(i).determinant()*RHS_v;
+}
+
+VectorXd F_Total(){
+	VectorXd Tot_F(2*NNode);
+	Vector6d Vec_F;
+	Tot_F.setZero();
+	int NTri, index1, index2, index3, index4, index5, index6;
+	NTri=F.rows();
+	for(int i=0; i<NTri; i++){
+		Vec_F=UniTopF_prism(i);
+		index1=F(i,0);
+		index2=F(i,1);
+		index3=F(i,2);
+		index4=index1+NNode;// Should be equalvent to index1+NNode
+		index5=index2+NNode;
+		index6=index3+NNode;
+		Tot_F(index1)+=Vec_F(0);
+		Tot_F(index2)+=Vec_F(1);
+		Tot_F(index3)+=Vec_F(2);
+		Tot_F(index4)+=Vec_F(3);
+		Tot_F(index5)+=Vec_F(4);
+		Tot_F(index6)+=Vec_F(5);
+	}
+	return Dissipation*Tot_F; 
 }
 
 // Calculate the Mass matrix for prism i
