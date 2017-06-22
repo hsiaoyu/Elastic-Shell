@@ -16,7 +16,7 @@ double area=0.5, constE, nu, t, delt, ShrinkCoeffMD, ShrinkCoeffCD, rho, Dissipa
 MatrixXd velocity, V, Vbar, ENbar, Ibartot, MachineDirection, IAold;// ENbar is the edge normal of Vbar
 MatrixXi F, EdgeNV; // Eash row of EdgeNV(3*NTri,4) stores the index off the four vertices that are related to one edge
 VectorXi EdgeF;// EdgeF(3*NTri) stores the index of the  adjecent face of the edge other than the face that is indicated by the vector index 
-int NNode, gflag, tcount, storefreq, maxcount, InitialNum; // NNode is the total # of nodes
+int NNode, gflag, tcount, storefreq, InitialNum; // NNode is the total # of nodes
 Vector3d V_ini1, V_ini2; // Vini1, Vini2 are the fixed points of V when enabled gravity
 VectorXd Moisture_v, RHS_F, Mass;
 SparseMatrix<double> Mtot_Mass, Mtot_Stiffness;
@@ -56,7 +56,6 @@ int main(){
 	Infile >> DampingForce_Enabled;
 	Infile >> cdamp;
 	Infile >> storefreq; // The frequency of storing V to Vtime for animation
-	Infile >> maxcount; // Must be a multiple of storefreq
 	Infile >> InitialNum; // starting file number for recording the animation 
         igl::readOBJ("V_animation.obj",V,F);
 	igl::readOBJ("Vbar_animation.obj",Vbar,F);
@@ -90,6 +89,7 @@ int main(){
 void CalcIbar(){
 	int NTri = F.rows();
 	MatrixXd IAtot(2*NTri,2), IBtot(2*NTri,2), Itot(4*NTri,2),FN(NTri,3), EN(3*NTri,3);
+	Matrix2d IAbarnew, IBbarnew;
 //	igl::per_face_normals(V, F, FN);
 //	EN=Enormal(FN);
 	for (int i=0; i<NTri; i++){
@@ -108,7 +108,8 @@ void CalcIbar(){
 		//Canonical e1=(1,0), e2=(-1,1)
 		MD<<MachineDirection(i,0)-MachineDirection(i,1),MachineDirection(i,1);
 		CD<<MachineDirection(i+NTri,0)-MachineDirection(i+NTri,1),MachineDirection(i+NTri,1);
-		/*ctemp=MD.transpose()*tmp1*MD;
+		//----------------------Method 1----------------------------------------
+  		ctemp=MD.transpose()*tmp1*MD;
 		c1=(1.0-ShrinkCoeffMD*MoistureLevel)*(1.0-ShrinkCoeffMD*MoistureLevel)*ctemp;
 		ctemp=CD.transpose()*tmp1*MD;
 		c2=(1.0-ShrinkCoeffCD*MoistureLevel)*(1.0-ShrinkCoeffMD*MoistureLevel)*ctemp;
@@ -118,7 +119,6 @@ void CalcIbar(){
 		Utransform=U.inverse(); 
 		//Utransform *= 1/(MD(0)*CD(1)-MD(1)*CD(0));
 		MShrink << c1, c2, c2, c3;
-		cout << "(i,1)" << endl << MShrink << endl;
 		tmp1= Utransform.transpose()*MShrink*Utransform;
 		// Calculate I for the lower surface
                 ctemp=MD.transpose()*tmp2*MD;
@@ -129,24 +129,37 @@ void CalcIbar(){
 		ctemp=CD.transpose()*tmp2*CD;
 		c3=(1.0-ShrinkCoeffCD*MoistureLevel)*(1.0-ShrinkCoeffCD*MoistureLevel)*ctemp;
 		MShrink << c1, c2, c2, c3;
-		cout << "(i,2)" << endl << MShrink << endl;
 		tmp2= Utransform.transpose()*MShrink*Utransform;
-		*/
+		IAbarnew = (tmp1+tmp2)/2;
+		IBbarnew = (tmp1-tmp2)/(2*t);
+		//--------------------------------------------------------------------------
 		
-		c1=(1.0-ShrinkCoeffMD*MoistureLevel)*(1.0-ShrinkCoeffMD*MoistureLevel);
-		c2=(1.0-ShrinkCoeffCD*MoistureLevel)*(1.0-ShrinkCoeffCD*MoistureLevel);
+		/*//-----------Method 2--------------------------------------
+		Matrix2d T;
+ 		tmp1=IA+t*IB;
+		tmp2=IA-t*IB;
+		// Calculate top layer
+		MoistureLevel=(double)(Moisture_v(F(i,0))+Moisture_v(F(i,1))+Moisture_v(F(i,2)))/3;
+		c1=(1.0-ShrinkCoeffMD*MoistureLevel);
+		c2=(1.0-ShrinkCoeffCD*MoistureLevel);
 		U << MD(0), CD(0), MD(1), CD(1);
 		MShrink << c1, 0, 0, c2;
 		Utransform=U.inverse();
-		Matrix2d T;
 		T = U*MShrink*Utransform; 
-		//cout << i << endl << T << endl;
 		tmp1 = T.transpose()*tmp1*T;
+		// Calculate bottom layer
+		MoistureLevel=(double)(Moisture_v(F(i,0)+NNode)+Moisture_v(F(i,1)+NNode)+Moisture_v(F(i,2)+NNode))/3;
+		c1=(1.0-ShrinkCoeffMD*MoistureLevel);
+		c2=(1.0-ShrinkCoeffCD*MoistureLevel);
+		U << MD(0), CD(0), MD(1), CD(1);
+		MShrink << c1, 0, 0, c2;
+		Utransform=U.inverse();
+		T = U*MShrink*Utransform; 
 		tmp2 = T.transpose()*tmp2*T;
-		Matrix2d IAbarnew, IBbarnew;
 		IAbarnew = (tmp1+tmp2)/2;
 		IBbarnew = (tmp1-tmp2)/(2*t);
-
+		//-----------------------------------------------------------
+		*/
 		IAtot.block(2*i,0,2,2)=IAbarnew;
 		IBtot.block(2*i,0,2,2)=IBbarnew;
 		
@@ -203,7 +216,7 @@ MatrixXd CalcMD(MatrixXd GlobalMD){
 }
 
 bool pre_draw(igl::viewer::Viewer& viewer){
-	if ((tcount%storefreq)==0 && tcount<=maxcount){
+	if ((tcount%storefreq)==0){
 		//Vtime.conservativeResize(Vtime.rows()+NNode,3);
 		//Vtime.block(tcount/storefreq*NNode,0,NNode,3)=V;
 		stringstream FileName;
@@ -379,15 +392,14 @@ MatrixXd Force(){
 	FF2=-C*FF2;
 	//TODO: Check the direction of FDamp
         FF = FF1+FF2-FDamp;
-        //cout << "tcount " << tcount << endl;
-        //cout << "Vertex 6" << FF1.row(6) << endl;
-        //cout << "Vertex 303" << FF1.row(303) << endl;
-        //cout << "Vertex 363" << FF1.row(363) << endl;
-        //cout << "FF1" << endl << FF1 << endl;
-        //cout << "FF2" << endl << FF2 << endl;
-	//cout << "FDamp" << endl << -FDamp << endl;
-        //cout << "FF" << endl << FF << endl;
-        return FF;
+	/* Output force for testing
+        cout << "FF1" << endl << FF1 << endl;
+        cout << "FF2" << endl << FF2 << endl;
+	cout << "FDamp" << endl << -FDamp << endl;
+        cout << "FF" << endl << FF << endl;
+	*/
+        
+	return FF;
 }
 
 MatrixXd DelI(Vector3d v1, Vector3d v2, Vector3d v3){ // return delta I w.r.t to the change in Vi, V2, V3
