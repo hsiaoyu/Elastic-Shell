@@ -1,0 +1,2016 @@
+-1
+Iteration 1:
+50.8414
+Iteration 2:
+49.0746
+Iteration 3:
+46.6867
+Iteration 4:
+44.6334
+Iteration 5:
+42.6222
+Iteration 6:
+40.5752
+Iteration 7:
+39.7152
+Iteration 8:
+37.7669
+Iteration 9:
+35.5733
+Iteration 10:
+34.3963
+Iteration 11:
+33.0011
+Iteration 12:
+32.1246
+Iteration 13:
+30.9198
+Iteration 14:
+29.6274
+Iteration 15:
+28.4405
+Iteration 16:
+27.801
+Iteration 17:
+26.6051
+Iteration 18:
+25.2083
+Iteration 19:
+24.2741
+Iteration 20:
+21.7747
+Iteration 21:
+20.8294
+Iteration 22:
+19.8495
+Iteration 23:
+18.3789
+Iteration 24:
+17.616
+Iteration 25:
+16.0133
+Iteration 26:
+15.4087
+Iteration 27:
+14.9049
+Iteration 28:
+14.6355
+Iteration 29:
+14.5132
+Iteration 30:
+14.3649
+Iteration 31:
+14.2834
+Iteration 32:
+14.23
+Iteration 33:
+14.13
+Iteration 34:
+14.1191
+Iteration 35:
+14.0463
+Iteration 36:
+14.0039
+Iteration 37:
+13.9524
+Iteration 38:
+13.9321
+Iteration 39:
+13.8828
+Iteration 40:
+13.8632
+Iteration 41:
+13.8468
+Iteration 42:
+13.8214
+Iteration 43:
+13.7984
+Iteration 44:
+13.7684
+Iteration 45:
+13.7587
+Iteration 46:
+13.7417
+Iteration 47:
+13.7395
+Iteration 48:
+13.7198
+Iteration 49:
+13.7128
+Iteration 50:
+13.7062
+Iteration 51:
+13.6978
+Iteration 52:
+13.6922
+Iteration 53:
+13.6822
+Iteration 54:
+13.6773
+Iteration 55:
+13.6668
+Iteration 56:
+13.6489
+Iteration 57:
+13.6357
+Iteration 58:
+13.6171
+Iteration 59:
+13.5959
+Iteration 60:
+13.5722
+Iteration 61:
+13.5385
+Iteration 62:
+13.497
+Iteration 63:
+13.4571
+Iteration 64:
+13.4222
+Iteration 65:
+13.3848
+Iteration 66:
+13.3461
+Iteration 67:
+13.3325
+Iteration 68:
+13.2755
+Iteration 69:
+13.2562
+Iteration 70:
+13.2238
+Iteration 71:
+13.1767
+Iteration 72:
+13.1506
+Iteration 73:
+13.1048
+Iteration 74:
+13.0695
+Iteration 75:
+13.0441
+Iteration 76:
+13.0259
+Iteration 77:
+13.0049
+Iteration 78:
+12.9729
+Iteration 79:
+12.944
+Iteration 80:
+12.9103
+Iteration 81:
+12.8812
+Iteration 82:
+12.8541
+Iteration 83:
+12.8329
+Iteration 84:
+12.8083
+Iteration 85:
+12.785
+Iteration 86:
+12.7603
+Iteration 87:
+12.7309
+Iteration 88:
+12.7148
+Iteration 89:
+12.6944
+Iteration 90:
+12.6718
+Iteration 91:
+12.6517
+Iteration 92:
+12.6327
+Iteration 93:
+12.6183
+Iteration 94:
+12.602
+Iteration 95:
+12.5856
+Iteration 96:
+12.5669
+Iteration 97:
+12.55
+Iteration 98:
+12.5312
+Iteration 99:
+12.5087
+Iteration 100:
+12.4923
+Iteration 101:
+12.4731
+Iteration 102:
+12.4579
+Iteration 103:
+12.4361
+Iteration 104:
+12.4296
+Iteration 105:
+12.4124
+Iteration 106:
+12.4003
+Iteration 107:
+12.3857
+Iteration 108:
+12.3708
+Iteration 109:
+12.3549
+Iteration 110:
+12.3399
+Iteration 111:
+12.3284
+Iteration 112:
+12.3098
+Iteration 113:
+12.3007
+Iteration 114:
+12.2894
+Iteration 115:
+12.2736
+Iteration 116:
+12.2631
+Iteration 117:
+12.2417
+Iteration 118:
+12.2207
+Iteration 119:
+12.209
+Iteration 120:
+12.1934
+Iteration 121:
+12.1776
+Iteration 122:
+12.1736
+Iteration 123:
+12.1438
+Iteration 124:
+12.1353
+Iteration 125:
+12.1263
+Iteration 126:
+12.1107
+Iteration 127:
+12.1047
+Iteration 128:
+12.0719
+Iteration 129:
+12.0619
+Iteration 130:
+12.0488
+Iteration 131:
+12.0356
+Iteration 132:
+12.0215
+Iteration 133:
+12.0113
+Iteration 134:
+12.0021
+Iteration 135:
+11.9858
+Iteration 136:
+11.9622
+Iteration 137:
+11.9432
+Iteration 138:
+11.9243
+Iteration 139:
+11.9072
+Iteration 140:
+11.8902
+Iteration 141:
+11.8734
+Iteration 142:
+11.8616
+Iteration 143:
+11.8524
+Iteration 144:
+11.832
+Iteration 145:
+11.8059
+Iteration 146:
+11.7935
+Iteration 147:
+11.7794
+Iteration 148:
+11.7651
+Iteration 149:
+11.7559
+Iteration 150:
+11.7456
+Iteration 151:
+11.7386
+Iteration 152:
+11.7269
+Iteration 153:
+11.7147
+Iteration 154:
+11.7044
+Iteration 155:
+11.699
+Iteration 156:
+11.6905
+Iteration 157:
+11.6884
+Iteration 158:
+11.6791
+Iteration 159:
+11.6737
+Iteration 160:
+11.6687
+Iteration 161:
+11.6612
+Iteration 162:
+11.6581
+Iteration 163:
+11.6479
+Iteration 164:
+11.6443
+Iteration 165:
+11.6363
+Iteration 166:
+11.628
+Iteration 167:
+11.6187
+Iteration 168:
+11.6105
+Iteration 169:
+11.6016
+Iteration 170:
+11.5899
+Iteration 171:
+11.5782
+Iteration 172:
+11.5641
+Iteration 173:
+11.5541
+Iteration 174:
+11.5458
+Iteration 175:
+11.5367
+Iteration 176:
+11.53
+Iteration 177:
+11.5192
+Iteration 178:
+11.5114
+Iteration 179:
+11.501
+Iteration 180:
+11.4898
+Iteration 181:
+11.4816
+Iteration 182:
+11.4755
+Iteration 183:
+11.4671
+Iteration 184:
+11.4609
+Iteration 185:
+11.4521
+Iteration 186:
+11.4432
+Iteration 187:
+11.4353
+Iteration 188:
+11.4227
+Iteration 189:
+11.4165
+Iteration 190:
+11.4087
+Iteration 191:
+11.3997
+Iteration 192:
+11.3936
+Iteration 193:
+11.3814
+Iteration 194:
+11.369
+Iteration 195:
+11.3588
+Iteration 196:
+11.3467
+Iteration 197:
+11.3357
+Iteration 198:
+11.3255
+Iteration 199:
+11.3121
+Iteration 200:
+11.3052
+Iteration 201:
+11.295
+Iteration 202:
+11.2844
+Iteration 203:
+11.2764
+Iteration 204:
+11.2697
+Iteration 205:
+11.2617
+Iteration 206:
+11.2542
+Iteration 207:
+11.248
+Iteration 208:
+11.2317
+Iteration 209:
+11.2235
+Iteration 210:
+11.2069
+Iteration 211:
+11.1945
+Iteration 212:
+11.1848
+Iteration 213:
+11.1752
+Iteration 214:
+11.1695
+Iteration 215:
+11.1558
+Iteration 216:
+11.1422
+Iteration 217:
+11.1317
+Iteration 218:
+11.1237
+Iteration 219:
+11.1169
+Iteration 220:
+11.1069
+Iteration 221:
+11.0993
+Iteration 222:
+11.0925
+Iteration 223:
+11.0839
+Iteration 224:
+11.0731
+Iteration 225:
+11.061
+Iteration 226:
+11.0479
+Iteration 227:
+11.0431
+Iteration 228:
+11.0365
+Iteration 229:
+11.0297
+Iteration 230:
+11.0237
+Iteration 231:
+11.01
+Iteration 232:
+11.0043
+Iteration 233:
+10.993
+Iteration 234:
+10.9878
+Iteration 235:
+10.9822
+Iteration 236:
+10.9768
+Iteration 237:
+10.9645
+Iteration 238:
+10.9599
+Iteration 239:
+10.9535
+Iteration 240:
+10.9469
+Iteration 241:
+10.9452
+Iteration 242:
+10.9354
+Iteration 243:
+10.9327
+Iteration 244:
+10.927
+Iteration 245:
+10.9193
+Iteration 246:
+10.9114
+Iteration 247:
+10.9045
+Iteration 248:
+10.8945
+Iteration 249:
+10.8861
+Iteration 250:
+10.8752
+Iteration 251:
+10.8677
+Iteration 252:
+10.8611
+Iteration 253:
+10.8484
+Iteration 254:
+10.8471
+Iteration 255:
+10.8361
+Iteration 256:
+10.8324
+Iteration 257:
+10.8272
+Iteration 258:
+10.8205
+Iteration 259:
+10.8124
+Iteration 260:
+10.8062
+Iteration 261:
+10.8008
+Iteration 262:
+10.7938
+Iteration 263:
+10.7841
+Iteration 264:
+10.7785
+Iteration 265:
+10.7661
+Iteration 266:
+10.7607
+Iteration 267:
+10.7541
+Iteration 268:
+10.7481
+Iteration 269:
+10.7419
+Iteration 270:
+10.7332
+Iteration 271:
+10.7277
+Iteration 272:
+10.7211
+Iteration 273:
+10.7133
+Iteration 274:
+10.7091
+Iteration 275:
+10.7028
+Iteration 276:
+10.6983
+Iteration 277:
+10.6923
+Iteration 278:
+10.6872
+Iteration 279:
+10.6826
+Iteration 280:
+10.6771
+Iteration 281:
+10.6705
+Iteration 282:
+10.6607
+Iteration 283:
+10.6558
+Iteration 284:
+10.6509
+Iteration 285:
+10.6463
+Iteration 286:
+10.6416
+Iteration 287:
+10.6347
+Iteration 288:
+10.6289
+Iteration 289:
+10.6217
+Iteration 290:
+10.6161
+Iteration 291:
+10.6062
+Iteration 292:
+10.6031
+Iteration 293:
+10.5932
+Iteration 294:
+10.5878
+Iteration 295:
+10.5802
+Iteration 296:
+10.5715
+Iteration 297:
+10.5614
+Iteration 298:
+10.5539
+Iteration 299:
+10.5444
+Iteration 300:
+10.5336
+Iteration 301:
+10.5216
+Iteration 302:
+10.5169
+Iteration 303:
+10.5096
+Iteration 304:
+10.505
+Iteration 305:
+10.4983
+Iteration 306:
+10.4899
+Iteration 307:
+10.4842
+Iteration 308:
+10.4783
+Iteration 309:
+10.4756
+Iteration 310:
+10.4708
+Iteration 311:
+10.4658
+Iteration 312:
+10.4583
+Iteration 313:
+10.4535
+Iteration 314:
+10.4476
+Iteration 315:
+10.4454
+Iteration 316:
+10.4369
+Iteration 317:
+10.4327
+Iteration 318:
+10.4277
+Iteration 319:
+10.4202
+Iteration 320:
+10.4128
+Iteration 321:
+10.4069
+Iteration 322:
+10.4
+Iteration 323:
+10.3926
+Iteration 324:
+10.3822
+Iteration 325:
+10.3754
+Iteration 326:
+10.3685
+Iteration 327:
+10.3636
+Iteration 328:
+10.3552
+Iteration 329:
+10.3491
+Iteration 330:
+10.3375
+Iteration 331:
+10.3315
+Iteration 332:
+10.3237
+Iteration 333:
+10.321
+Iteration 334:
+10.3126
+Iteration 335:
+10.307
+Iteration 336:
+10.2982
+Iteration 337:
+10.2869
+Iteration 338:
+10.2749
+Iteration 339:
+10.2663
+Iteration 340:
+10.2584
+Iteration 341:
+10.2498
+Iteration 342:
+10.2428
+Iteration 343:
+10.2359
+Iteration 344:
+10.2323
+Iteration 345:
+10.2246
+Iteration 346:
+10.2211
+Iteration 347:
+10.2139
+Iteration 348:
+10.2101
+Iteration 349:
+10.2053
+Iteration 350:
+10.1972
+Iteration 351:
+10.1948
+Iteration 352:
+10.1822
+Iteration 353:
+10.1769
+Iteration 354:
+10.1673
+Iteration 355:
+10.1605
+Iteration 356:
+10.1508
+Iteration 357:
+10.1444
+Iteration 358:
+10.1383
+Iteration 359:
+10.1299
+Iteration 360:
+10.1201
+Iteration 361:
+10.1088
+Iteration 362:
+10.0986
+Iteration 363:
+10.09
+Iteration 364:
+10.0844
+Iteration 365:
+10.0728
+Iteration 366:
+10.066
+Iteration 367:
+10.0605
+Iteration 368:
+10.0528
+Iteration 369:
+10.0482
+Iteration 370:
+10.0416
+Iteration 371:
+10.0233
+Iteration 372:
+10.0153
+Iteration 373:
+10.0042
+Iteration 374:
+9.99152
+Iteration 375:
+9.97475
+Iteration 376:
+9.96749
+Iteration 377:
+9.95209
+Iteration 378:
+9.94358
+Iteration 379:
+9.93446
+Iteration 380:
+9.92729
+Iteration 381:
+9.91853
+Iteration 382:
+9.90478
+Iteration 383:
+9.89198
+Iteration 384:
+9.88524
+Iteration 385:
+9.87701
+Iteration 386:
+9.86806
+Iteration 387:
+9.86128
+Iteration 388:
+9.85034
+Iteration 389:
+9.84284
+Iteration 390:
+9.83581
+Iteration 391:
+9.82563
+Iteration 392:
+9.82058
+Iteration 393:
+9.81081
+Iteration 394:
+9.80252
+Iteration 395:
+9.79365
+Iteration 396:
+9.78509
+Iteration 397:
+9.77276
+Iteration 398:
+9.76552
+Iteration 399:
+9.76094
+Iteration 400:
+9.75132
+Iteration 401:
+9.74353
+Iteration 402:
+9.73102
+Iteration 403:
+9.71884
+Iteration 404:
+9.70784
+Iteration 405:
+9.69812
+Iteration 406:
+9.68754
+Iteration 407:
+9.6792
+Iteration 408:
+9.67284
+Iteration 409:
+9.66502
+Iteration 410:
+9.65998
+Iteration 411:
+9.65391
+Iteration 412:
+9.64568
+Iteration 413:
+9.63531
+Iteration 414:
+9.62388
+Iteration 415:
+9.61879
+Iteration 416:
+9.61012
+Iteration 417:
+9.60405
+Iteration 418:
+9.59577
+Iteration 419:
+9.58512
+Iteration 420:
+9.58024
+Iteration 421:
+9.57083
+Iteration 422:
+9.56007
+Iteration 423:
+9.55709
+Iteration 424:
+9.54771
+Iteration 425:
+9.54378
+Iteration 426:
+9.53706
+Iteration 427:
+9.53104
+Iteration 428:
+9.52369
+Iteration 429:
+9.51898
+Iteration 430:
+9.51108
+Iteration 431:
+9.50637
+Iteration 432:
+9.50097
+Iteration 433:
+9.49706
+Iteration 434:
+9.49239
+Iteration 435:
+9.48756
+Iteration 436:
+9.48368
+Iteration 437:
+9.47887
+Iteration 438:
+9.47193
+Iteration 439:
+9.46362
+Iteration 440:
+9.45566
+Iteration 441:
+9.4502
+Iteration 442:
+9.44375
+Iteration 443:
+9.43952
+Iteration 444:
+9.43469
+Iteration 445:
+9.43401
+Iteration 446:
+9.42672
+Iteration 447:
+9.42436
+Iteration 448:
+9.41995
+Iteration 449:
+9.41296
+Iteration 450:
+9.40814
+Iteration 451:
+9.40295
+Iteration 452:
+9.40009
+Iteration 453:
+9.39682
+Iteration 454:
+9.39365
+Iteration 455:
+9.39043
+Iteration 456:
+9.38606
+Iteration 457:
+9.3824
+Iteration 458:
+9.37758
+Iteration 459:
+9.37487
+Iteration 460:
+9.3712
+Iteration 461:
+9.36674
+Iteration 462:
+9.36195
+Iteration 463:
+9.3582
+Iteration 464:
+9.35328
+Iteration 465:
+9.34957
+Iteration 466:
+9.34641
+Iteration 467:
+9.33876
+Iteration 468:
+9.33782
+Iteration 469:
+9.33059
+Iteration 470:
+9.32859
+Iteration 471:
+9.32482
+Iteration 472:
+9.32333
+Iteration 473:
+9.31928
+Iteration 474:
+9.31707
+Iteration 475:
+9.31458
+Iteration 476:
+9.31021
+Iteration 477:
+9.30762
+Iteration 478:
+9.30435
+Iteration 479:
+9.30149
+Iteration 480:
+9.29645
+Iteration 481:
+9.29432
+Iteration 482:
+9.28974
+Iteration 483:
+9.28551
+Iteration 484:
+9.28178
+Iteration 485:
+9.27862
+Iteration 486:
+9.27561
+Iteration 487:
+9.27248
+Iteration 488:
+9.27034
+Iteration 489:
+9.26818
+Iteration 490:
+9.2657
+Iteration 491:
+9.26443
+Iteration 492:
+9.26279
+Iteration 493:
+9.25963
+Iteration 494:
+9.25786
+Iteration 495:
+9.25543
+Iteration 496:
+9.25369
+Iteration 497:
+9.25193
+Iteration 498:
+9.24937
+Iteration 499:
+9.24806
+Iteration 500:
+9.24666
+Iteration 501:
+9.24541
+Iteration 502:
+9.24391
+Iteration 503:
+9.24224
+Iteration 504:
+9.23891
+Iteration 505:
+9.23797
+Iteration 506:
+9.23548
+Iteration 507:
+9.23382
+Iteration 508:
+9.2322
+Iteration 509:
+9.23001
+Iteration 510:
+9.22743
+Iteration 511:
+9.22559
+Iteration 512:
+9.22338
+Iteration 513:
+9.22164
+Iteration 514:
+9.21998
+Iteration 515:
+9.21794
+Iteration 516:
+9.21642
+Iteration 517:
+9.21523
+Iteration 518:
+9.21365
+Iteration 519:
+9.21315
+Iteration 520:
+9.21229
+Iteration 521:
+9.21128
+Iteration 522:
+9.21049
+Iteration 523:
+9.20897
+Iteration 524:
+9.20758
+Iteration 525:
+9.20631
+Iteration 526:
+9.20472
+Iteration 527:
+9.20335
+Iteration 528:
+9.20187
+Iteration 529:
+9.20065
+Iteration 530:
+9.19978
+Iteration 531:
+9.19834
+Iteration 532:
+9.1977
+Iteration 533:
+9.19508
+Iteration 534:
+9.19409
+Iteration 535:
+9.19262
+Iteration 536:
+9.19084
+Iteration 537:
+9.18908
+Iteration 538:
+9.18797
+Iteration 539:
+9.18657
+Iteration 540:
+9.18508
+Iteration 541:
+9.1832
+Iteration 542:
+9.1816
+Iteration 543:
+9.17987
+Iteration 544:
+9.17778
+Iteration 545:
+9.17623
+Iteration 546:
+9.17459
+Iteration 547:
+9.17333
+Iteration 548:
+9.17137
+Iteration 549:
+9.16966
+Iteration 550:
+9.16816
+Iteration 551:
+9.16561
+Iteration 552:
+9.1639
+Iteration 553:
+9.16216
+Iteration 554:
+9.16016
+Iteration 555:
+9.15889
+Iteration 556:
+9.15698
+Iteration 557:
+9.15548
+Iteration 558:
+9.15436
+Iteration 559:
+9.15262
+Iteration 560:
+9.15069
+Iteration 561:
+9.14915
+Iteration 562:
+9.14767
+Iteration 563:
+9.14605
+Iteration 564:
+9.14448
+Iteration 565:
+9.14281
+Iteration 566:
+9.14177
+Iteration 567:
+9.14082
+Iteration 568:
+9.13853
+Iteration 569:
+9.13736
+Iteration 570:
+9.13593
+Iteration 571:
+9.13435
+Iteration 572:
+9.13272
+Iteration 573:
+9.13136
+Iteration 574:
+9.12946
+Iteration 575:
+9.12843
+Iteration 576:
+9.12707
+Iteration 577:
+9.12503
+Iteration 578:
+9.12369
+Iteration 579:
+9.12175
+Iteration 580:
+9.12042
+Iteration 581:
+9.11852
+Iteration 582:
+9.11716
+Iteration 583:
+9.11577
+Iteration 584:
+9.11457
+Iteration 585:
+9.11351
+Iteration 586:
+9.11182
+Iteration 587:
+9.11096
+Iteration 588:
+9.1104
+Iteration 589:
+9.10935
+Iteration 590:
+9.10819
+Iteration 591:
+9.1066
+Iteration 592:
+9.10495
+Iteration 593:
+9.10377
+Iteration 594:
+9.10264
+Iteration 595:
+9.10126
+Iteration 596:
+9.10013
+Iteration 597:
+9.09859
+Iteration 598:
+9.09708
+Iteration 599:
+9.09559
+Iteration 600:
+9.09528
+Iteration 601:
+9.09385
+Iteration 602:
+9.09305
+Iteration 603:
+9.09173
+Iteration 604:
+9.09069
+Iteration 605:
+9.08942
+Iteration 606:
+9.08842
+Iteration 607:
+9.08713
+Iteration 608:
+9.08625
+Iteration 609:
+9.08517
+Iteration 610:
+9.08325
+Iteration 611:
+9.083
+Iteration 612:
+9.08134
+Iteration 613:
+9.08079
+Iteration 614:
+9.07979
+Iteration 615:
+9.07861
+Iteration 616:
+9.07697
+Iteration 617:
+9.07519
+Iteration 618:
+9.0742
+Iteration 619:
+9.07359
+Iteration 620:
+9.07282
+Iteration 621:
+9.07159
+Iteration 622:
+9.0708
+Iteration 623:
+9.06935
+Iteration 624:
+9.06884
+Iteration 625:
+9.06828
+Iteration 626:
+9.06735
+Iteration 627:
+9.06702
+Iteration 628:
+9.06571
+Iteration 629:
+9.06535
+Iteration 630:
+9.06469
+Iteration 631:
+9.06436
+Iteration 632:
+9.06373
+Iteration 633:
+9.06312
+Iteration 634:
+9.06262
+Iteration 635:
+9.06216
+Iteration 636:
+9.06139
+Iteration 637:
+9.06056
+Iteration 638:
+9.05988
+Iteration 639:
+9.05888
+Iteration 640:
+9.05838
+Iteration 641:
+9.05786
+Iteration 642:
+9.05716
+Iteration 643:
+9.05623
+Iteration 644:
+9.0558
+Iteration 645:
+9.05528
+Iteration 646:
+9.05488
+Iteration 647:
+9.05433
+Iteration 648:
+9.05383
+Iteration 649:
+9.05312
+Iteration 650:
+9.0526
+Iteration 651:
+9.05204
+Iteration 652:
+9.05155
+Iteration 653:
+9.05068
+Iteration 654:
+9.04988
+Iteration 655:
+9.04933
+Iteration 656:
+9.04811
+Iteration 657:
+9.04742
+Iteration 658:
+9.04654
+Iteration 659:
+9.04615
+Iteration 660:
+9.0455
+Iteration 661:
+9.04444
+Iteration 662:
+9.04395
+Iteration 663:
+9.0435
+Iteration 664:
+9.04311
+Iteration 665:
+9.04271
+Iteration 666:
+9.04238
+Iteration 667:
+9.04189
+Iteration 668:
+9.04159
+Iteration 669:
+9.0413
+Iteration 670:
+9.04102
+Iteration 671:
+9.0407
+Iteration 672:
+9.04036
+Iteration 673:
+9.03995
+Iteration 674:
+9.03937
+Iteration 675:
+9.03901
+Iteration 676:
+9.03853
+Iteration 677:
+9.03811
+Iteration 678:
+9.03756
+Iteration 679:
+9.03697
+Iteration 680:
+9.03668
+Iteration 681:
+9.03619
+Iteration 682:
+9.03585
+Iteration 683:
+9.03547
+Iteration 684:
+9.03499
+Iteration 685:
+9.03469
+Iteration 686:
+9.03405
+Iteration 687:
+9.03352
+Iteration 688:
+9.03318
+Iteration 689:
+9.03268
+Iteration 690:
+9.03226
+Iteration 691:
+9.0319
+Iteration 692:
+9.03126
+Iteration 693:
+9.03102
+Iteration 694:
+9.03068
+Iteration 695:
+9.03043
+Iteration 696:
+9.02991
+Iteration 697:
+9.02924
+Iteration 698:
+9.02851
+Iteration 699:
+9.02761
+Iteration 700:
+9.02691
+Iteration 701:
+9.02638
+Iteration 702:
+9.02561
+Iteration 703:
+9.02487
+Iteration 704:
+9.02382
+Iteration 705:
+9.02294
+Iteration 706:
+9.02259
+Iteration 707:
+9.02206
+Iteration 708:
+9.02174
+Iteration 709:
+9.02126
+Iteration 710:
+9.02085
+Iteration 711:
+9.02051
+Iteration 712:
+9.02021
+Iteration 713:
+9.0197
+Iteration 714:
+9.01935
+Iteration 715:
+9.019
+Iteration 716:
+9.01845
+Iteration 717:
+9.01794
+Iteration 718:
+9.01763
+Iteration 719:
+9.0174
+Iteration 720:
+9.01696
+Iteration 721:
+9.01658
+Iteration 722:
+9.01565
+Iteration 723:
+9.01528
+Iteration 724:
+9.01478
+Iteration 725:
+9.01403
+Iteration 726:
+9.01363
+Iteration 727:
+9.01309
+Iteration 728:
+9.01265
+Iteration 729:
+9.0121
+Iteration 730:
+9.01127
+Iteration 731:
+9.0106
+Iteration 732:
+9.00997
+Iteration 733:
+9.00951
+Iteration 734:
+9.0091
+Iteration 735:
+9.00857
+Iteration 736:
+9.00798
+Iteration 737:
+9.00756
+Iteration 738:
+9.00721
+Iteration 739:
+9.00644
+Iteration 740:
+9.00555
+Iteration 741:
+9.0051
+Iteration 742:
+9.00443
+Iteration 743:
+9.00398
+Iteration 744:
+9.00348
+Iteration 745:
+9.00282
+Iteration 746:
+9.00239
+Iteration 747:
+9.00152
+Iteration 748:
+9.00106
+Iteration 749:
+9.00017
+Iteration 750:
+8.99976
+Iteration 751:
+8.99914
+Iteration 752:
+8.99824
+Iteration 753:
+8.99762
+Iteration 754:
+8.99696
+Iteration 755:
+8.9965
+Iteration 756:
+8.99592
+Iteration 757:
+8.99486
+Iteration 758:
+8.99411
+Iteration 759:
+8.99317
+Iteration 760:
+8.9918
+Iteration 761:
+8.99105
+Iteration 762:
+8.99015
+Iteration 763:
+8.98929
+Iteration 764:
+8.98839
+Iteration 765:
+8.98746
+Iteration 766:
+8.98583
+Iteration 767:
+8.98482
+Iteration 768:
+8.98398
+Iteration 769:
+8.98323
+Iteration 770:
+8.98258
+Iteration 771:
+8.9816
+Iteration 772:
+8.98074
+Iteration 773:
+8.97981
+Iteration 774:
+8.97913
+Iteration 775:
+8.9781
+Iteration 776:
+8.97682
+Iteration 777:
+8.97541
+Iteration 778:
+8.97443
+Iteration 779:
+8.97327
+Iteration 780:
+8.97238
+Iteration 781:
+8.97187
+Iteration 782:
+8.9704
+Iteration 783:
+8.9693
+Iteration 784:
+8.96796
+Iteration 785:
+8.9666
+Iteration 786:
+8.96565
+Iteration 787:
+8.96468
+Iteration 788:
+8.96316
+Iteration 789:
+8.96197
+Iteration 790:
+8.96099
+Iteration 791:
+8.96013
+Iteration 792:
+8.95921
+Iteration 793:
+8.95819
+Iteration 794:
+8.95724
+Iteration 795:
+8.95612
+Iteration 796:
+8.95518
+Iteration 797:
+8.95417
+Iteration 798:
+8.95302
+Iteration 799:
+8.95268
+Iteration 800:
+8.95168
+Iteration 801:
+8.95106
+Iteration 802:
+8.95
+Iteration 803:
+8.94875
+Iteration 804:
+8.9479
+Iteration 805:
+8.94647
+Iteration 806:
+8.94537
+Iteration 807:
+8.94403
+Iteration 808:
+8.94263
+Iteration 809:
+8.94085
+Iteration 810:
+8.93934
+Iteration 811:
+8.93818
+Iteration 812:
+8.93739
+Iteration 813:
+8.93641
+Iteration 814:
+8.93504
+Iteration 815:
+8.93427
+Iteration 816:
+8.93321
+Iteration 817:
+8.93236
+Iteration 818:
+8.93148
+Iteration 819:
+8.93035
+Iteration 820:
+8.92915
+Iteration 821:
+8.92804
+Iteration 822:
+8.9269
+Iteration 823:
+8.92593
+Iteration 824:
+8.9249
+Iteration 825:
+8.92378
+Iteration 826:
+8.92289
+Iteration 827:
+8.92142
+Iteration 828:
+8.92028
+Iteration 829:
+8.91937
+Iteration 830:
+8.91857
+Iteration 831:
+8.91776
+Iteration 832:
+8.91695
+Iteration 833:
+8.91574
+Iteration 834:
+8.91524
+Iteration 835:
+8.91455
+Iteration 836:
+8.91344
+Iteration 837:
+8.91226
+Iteration 838:
+8.91101
+Iteration 839:
+8.90959
+Iteration 840:
+8.9082
+Iteration 841:
+8.90609
+Iteration 842:
+8.90536
+Iteration 843:
+8.90435
+Iteration 844:
+8.90258
+Iteration 845:
+8.90118
+Iteration 846:
+8.89978
+Iteration 847:
+8.89856
+Iteration 848:
+8.89696
+Iteration 849:
+8.89576
+Iteration 850:
+8.89438
+Iteration 851:
+8.89329
+Iteration 852:
+8.89251
+Iteration 853:
+8.89177
+Iteration 854:
+8.89082
+Iteration 855:
+8.88987
+Iteration 856:
+8.88908
+Iteration 857:
+8.88732
+Iteration 858:
+8.8866
+Iteration 859:
+8.88583
+Iteration 860:
+8.88478
+Iteration 861:
+8.88426
+Iteration 862:
+8.88387
+Iteration 863:
+8.88317
+Iteration 864:
+8.88246
+Iteration 865:
+8.88109
+Iteration 866:
+8.87986
+Iteration 867:
+8.87869
+Iteration 868:
+8.87759
+Iteration 869:
+8.87694
+Iteration 870:
+8.87606
+Iteration 871:
+8.87514
+Iteration 872:
+8.87415
+Iteration 873:
+8.87313
+Iteration 874:
+8.87215
+Iteration 875:
+8.87075
+Iteration 876:
+8.86994
+Iteration 877:
+8.86847
+Iteration 878:
+8.86737
+Iteration 879:
+8.86617
+Iteration 880:
+8.86505
+Iteration 881:
+8.86423
+Iteration 882:
+8.86326
+Iteration 883:
+8.8617
+Iteration 884:
+8.8606
+Iteration 885:
+8.85899
+Iteration 886:
+8.85739
+Iteration 887:
+8.85604
+Iteration 888:
+8.85543
+Iteration 889:
+8.85472
+Iteration 890:
+8.8539
+Iteration 891:
+8.85268
+Iteration 892:
+8.85184
+Iteration 893:
+8.85129
+Iteration 894:
+8.84993
+Iteration 895:
+8.8493
+Iteration 896:
+8.84857
+Iteration 897:
+8.84799
+Iteration 898:
+8.84715
+Iteration 899:
+8.84646
+Iteration 900:
+8.84586
+Iteration 901:
+8.84525
+Iteration 902:
+8.84475
+Iteration 903:
+8.84385
+Iteration 904:
+8.84289
+Iteration 905:
+8.84229
+Iteration 906:
+8.84165
+Iteration 907:
+8.84131
+Iteration 908:
+8.83979
+Iteration 909:
+8.83916
+Iteration 910:
+8.83836
+Iteration 911:
+8.83708
+Iteration 912:
+8.83627
+Iteration 913:
+8.83543
+Iteration 914:
+8.83478
+Iteration 915:
+8.83372
+Iteration 916:
+8.83295
+Iteration 917:
+8.832
+Iteration 918:
+8.83134
+Iteration 919:
+8.83047
+Iteration 920:
+8.82961
+Iteration 921:
+8.82884
+Iteration 922:
+8.8284
+Iteration 923:
+8.82782
+Iteration 924:
+8.82734
+Iteration 925:
+8.82664
+Iteration 926:
+8.82573
+Iteration 927:
+8.82463
+Iteration 928:
+8.82399
+Iteration 929:
+8.82318
+Iteration 930:
+8.82261
+Iteration 931:
+8.82172
+Iteration 932:
+8.82079
+Iteration 933:
+8.82025
+Iteration 934:
+8.8195
+Iteration 935:
+8.8188
+Iteration 936:
+8.81774
+Iteration 937:
+8.81737
+Iteration 938:
+8.81663
+Iteration 939:
+8.81604
+Iteration 940:
+8.81555
+Iteration 941:
+8.81517
+Iteration 942:
+8.81444
+Iteration 943:
+8.8141
+Iteration 944:
+8.81378
+Iteration 945:
+8.81312
+Iteration 946:
+8.81226
+Iteration 947:
+8.81101
+Iteration 948:
+8.81025
+Iteration 949:
+8.80934
+Iteration 950:
+8.80924
+Iteration 951:
+8.8083
+Iteration 952:
+8.80785
+Iteration 953:
+8.8072
+Iteration 954:
+8.80631
+Iteration 955:
+8.8057
+Iteration 956:
+8.80464
+Iteration 957:
+8.80415
+Iteration 958:
+8.8035
+Iteration 959:
+8.8031
+Iteration 960:
+8.80276
+Iteration 961:
+8.8023
+Iteration 962:
+8.80187
+Iteration 963:
+8.80132
+Iteration 964:
+8.80082
+Iteration 965:
+8.80033
+Iteration 966:
+8.79957
+Iteration 967:
+8.79908
+Iteration 968:
+8.79852
+Iteration 969:
+8.79804
+Iteration 970:
+8.79749
+Iteration 971:
+8.79684
+Iteration 972:
+8.79595
+Iteration 973:
+8.79535
+Iteration 974:
+8.79428
+Iteration 975:
+8.79334
+Iteration 976:
+8.79223
+Iteration 977:
+8.79133
+Iteration 978:
+8.79054
+Iteration 979:
+8.78976
+Iteration 980:
+8.78882
+Iteration 981:
+8.78796
+Iteration 982:
+8.78716
+Iteration 983:
+8.78634
+Iteration 984:
+8.78567
+Iteration 985:
+8.78494
+Iteration 986:
+8.78447
+Iteration 987:
+8.78408
+Iteration 988:
+8.78307
+Iteration 989:
+8.78271
+Iteration 990:
+8.78138
+Iteration 991:
+8.78089
+Iteration 992:
+8.78039
+Iteration 993:
+8.77952
+Iteration 994:
+8.77891
+Iteration 995:
+8.77821
+Iteration 996:
+8.77759
+Iteration 997:
+8.7767
+Iteration 998:
+8.77564
+Iteration 999:
+8.77459
+Iteration 1000:
+8.77386
+L-BFGS optimization terminated with status code = -997
+  fx = 8.773856, x[0] = 0.967062, x[1] = -0.000834
+8circle.obj
+igl::viewer::Viewer usage:
+  [drag]  Rotate scene
+  A,a     Toggle animation (tight draw loop)
+  I,i     Toggle invert normals
+  L,l     Toggle wireframe
+  O,o     Toggle orthographic/perspective projection
+  T,t     Toggle filled faces
+  Z       Snap to canonical view
+  [,]     Toggle between rotation control types (e.g. trackball, two-axis
+          valuator with fixed up)
+X11: The DISPLAY environment variable is missingburning_static.o: /h1/hsiaoyu/Documents/glfw-master/src/window.c:412: glfwWindowShouldClose: Assertion `window != ((void *)0)' failed.
+./run_burning_static.sh: line 1: 31744 Aborted                 (core dumped) LD_LIBRARY_PATH=/h1/hsiaoyu/program/usr/local/lib64/:/h1/hsiaoyu/program/usr/local/lib/ ./burning_static.o

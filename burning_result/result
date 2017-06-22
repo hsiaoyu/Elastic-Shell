@@ -1,0 +1,19 @@
+4circle.obj
+The moisture level is 0 at bottom, and drier on the top surface (5% drier at the rim than center)
+center has moisture level 0.
+
+5circle.obj
+The moisture level is 0 at bottom, and wetter on the top surface (5% wetter at the rim than center)
+center has moisture level 0.
+
+6circle.obj
+The moisture level is the same in top and bottom surface, while the rim the 5% drier than the center.(Moisture is linear wrt the distance from center)
+
+7circle.obj
+The moisture level is the same in top and bottom surface, while the rim the 5% wetter than the center.(Moisture is linear wrt the distance from center)
+
+9circle.obj
+Same setup as 7circle.obj but with a finer mesh
+
+BurnDiffusion simulates the animation for drying the top surface of the paper with different young's modulus
+
