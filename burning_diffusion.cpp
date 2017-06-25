@@ -12,8 +12,8 @@
 using namespace std;
 using namespace Eigen;
 Matrix2d CanonM1, CanonM2, CanonM3;
-double area=0.5, constE, nu, t, delt, ShrinkCoeffMD, ShrinkCoeffCD, rho, Dissipation, DiffusionCoeff, cdamp; // area of the canonical triangle
-MatrixXd velocity, V, Vbar, ENbar, Ibartot, MachineDirection, IAold;// ENbar is the edge normal of Vbar
+double area=0.5, constE, nu, t, delt, ShrinkCoeffMD, ShrinkCoeffCD, rho, Dissipation, DiffusionCoeff, cdamp1, cdamp2; // area of the canonical triangle
+MatrixXd velocity, V, Vbar, ENbar, Ibartot, MachineDirection, IAold, IBold;// ENbar is the edge normal of Vbar
 MatrixXi F, EdgeNV; // Eash row of EdgeNV(3*NTri,4) stores the index off the four vertices that are related to one edge
 VectorXi EdgeF;// EdgeF(3*NTri) stores the index of the  adjecent face of the edge other than the face that is indicated by the vector index 
 int NNode, gflag, tcount, storefreq, InitialNum; // NNode is the total # of nodes
@@ -42,6 +42,7 @@ int main(){
         getline(Infile,objname); 
         getline(Infile,moistname); 
         igl::readDMAT(cstr1, Moisture_v);
+	bool Display;
         Infile >> constE;
         Infile >> nu;
         Infile >> t;
@@ -54,9 +55,11 @@ int main(){
 	Infile >> DiffusionCoeff;
 	Infile >> Dissipation;
 	Infile >> DampingForce_Enabled;
-	Infile >> cdamp;
+	Infile >> cdamp1;
+	Infile >> cdamp2;
 	Infile >> storefreq; // The frequency of storing V to Vtime for animation
 	Infile >> InitialNum; // starting file number for recording the animation 
+	Infile >> Display; // starting file number for recording the animation 
         igl::readOBJ("V_animation.obj",V,F);
 	igl::readOBJ("Vbar_animation.obj",Vbar,F);
         MachineDirection = CalcMD(GlobalMD);
@@ -75,13 +78,28 @@ int main(){
     	Mtot_Stiffness=Stiffness_Total();
     	Mtot_Stiffness*=DiffusionCoeff;
         IAold.resize(2*NTri,2);
+        IBold.resize(2*NTri,2);
 	tcount =0; // Total time step
-	igl::viewer::Viewer viewer;
-        viewer.data.set_mesh(V, F);
-        viewer.core.is_animating = true;
-        viewer.core.animation_max_fps = 30.;
-        viewer.callback_pre_draw = &pre_draw;
-        viewer.launch();
+	while(true){
+	  if ((tcount%storefreq)==0){
+	  	stringstream FileName;
+	  	FileName << objname << tcount/storefreq+InitialNum << ".obj"; 
+	  	igl::writeOBJ(FileName.str(),V,F);
+	  	FileName.str("");
+	  	FileName << moistname << tcount/storefreq+InitialNum << ".dmat"; 
+	  	igl::writeDMAT(FileName.str(),Moisture_v,1);
+	  }
+	  if (Display == 1){
+	    igl::viewer::Viewer viewer;
+            viewer.data.set_mesh(V, F);
+            viewer.core.is_animating = true;
+            viewer.core.animation_max_fps = 30.;
+            viewer.callback_pre_draw = &pre_draw;
+            viewer.launch();
+	  }
+	  Sim();
+  	  tcount++;
+	}
 	return 0;
 }
       
@@ -216,9 +234,7 @@ MatrixXd CalcMD(MatrixXd GlobalMD){
 }
 
 bool pre_draw(igl::viewer::Viewer& viewer){
-	if ((tcount%storefreq)==0){
-		//Vtime.conservativeResize(Vtime.rows()+NNode,3);
-		//Vtime.block(tcount/storefreq*NNode,0,NNode,3)=V;
+/*	if ((tcount%storefreq)==0){
 		stringstream FileName;
 		FileName << objname << tcount/storefreq+InitialNum << ".obj"; 
 		igl::writeOBJ(FileName.str(),V,F);
@@ -226,10 +242,10 @@ bool pre_draw(igl::viewer::Viewer& viewer){
 		FileName << moistname << tcount/storefreq+InitialNum << ".dmat"; 
 		igl::writeDMAT(FileName.str(),Moisture_v,1);
 	}
-        //if (tcount <1){
+
 	Sim();
-        //}
 	tcount++;
+*/
         viewer.data.clear();
     	viewer.data.set_mesh(V, F);
     	viewer.core.align_camera_center(V,F);
@@ -325,13 +341,14 @@ MatrixXd Force(){
 	int i, NTri;
 	double c1, c2, C, dval;
 	NTri=F.rows();
-	MatrixXd dN, dI(18,2), Tr(2,3), FF(NNode,3), FF2(NNode,3), FF1(NNode,3), FN(NTri,3), EN(3*NTri,3), FDamp(NNode,3);
+	MatrixXd dN, dI(18,2), Tr(2,3), TrDamp(2,3), FF(NNode,3), FF2(NNode,3), FF1(NNode,3), FN(NTri,3), EN(3*NTri,3), FDamp1(NNode,3), FDamp2(NNode,3);
 	igl::per_face_normals(V, F, FN);
 	EN=Enormal(FN);	
 	dN=dEnormM(); //dN is the derivative of egde normal w.r.t. the four vectices cooresponding to the edge
         FF2.setZero();
 	FF1.setZero();
-	FDamp.setZero();
+	FDamp1.setZero();
+	FDamp2.setZero();
 	for (i=0; i<NTri; i++) {
 		Ed << V.row(F(i,1))-V.row(F(i,0)), V.row(F(i,2))-V.row(F(i,1)), V.row(F(i,0))-V.row(F(i,2)); //Ed.row(i) is the ith  edge vector for deformed triangle
 		C=constE/(1-nu*nu);
@@ -346,6 +363,9 @@ MatrixXd Force(){
 		A=Inv*(IA-IAbar);
 		dI=DelI(V.row(F(i,0)),V.row(F(i,1)),V.row(F(i,2)));
 		Tr << B.trace()*(Inv*CanonM1).trace(), B.trace()*(Inv*CanonM2).trace(), B.trace()*(Inv*CanonM3).trace(), (B*Inv*CanonM1).trace(), (B*Inv*CanonM2).trace(), (B*Inv*CanonM3).trace();
+		Matrix2d BDamp;
+		BDamp = Inv*(IB-IBold.block(2*i,0,2,2));
+		TrDamp << BDamp.trace()*(Inv*CanonM1).trace(), BDamp.trace()*(Inv*CanonM2).trace(), BDamp.trace()*(Inv*CanonM3).trace(), (BDamp*Inv*CanonM1).trace(), (BDamp*Inv*CanonM2).trace(), (BDamp*Inv*CanonM3).trace();
 		for (int j=0; j<3; j++){
 			for (int k=0; k<4; k++){
 				if (EdgeNV(3*i+j,k)!=-1){
@@ -353,17 +373,29 @@ MatrixXd Force(){
 					dval2=-2*Ed.row((j+2)%3)*dN.block(9*i+3*j,3*k,3,3); // originate form the term -2<dn(j),e(j-1)>
 					FF2.row(EdgeNV(3*i+j,k))+= -2*pow(t,3)*(c1*(Tr(0,(j+1)%3)-Tr(0,j)-Tr(0,(j+2)%3))+c2*(Tr(1,(j+1)%3)-Tr(1,j)-Tr(1,(j+2)%3)))*dval1;
 					FF2.row(EdgeNV(3*i+j,k))+= -2*pow(t,3)*(c1*(Tr(0,(j+2)%3)-Tr(0,j)-Tr(0,(j+1)%3))+c2*(Tr(1,(j+2)%3)-Tr(1,j)-Tr(1,(j+1)%3)))*dval2;
+               				if(DampingForce_Enabled && tcount >0){
+						FDamp2.row(EdgeNV(3*i+j,k))+= -2*pow(t,3)*(c1*(TrDamp(0,(j+1)%3)-TrDamp(0,j)-TrDamp(0,(j+2)%3))+c2*(TrDamp(1,(j+1)%3)-TrDamp(1,j)-TrDamp(1,(j+2)%3)))*dval1;
+						FDamp2.row(EdgeNV(3*i+j,k))+= -2*pow(t,3)*(c1*(TrDamp(0,(j+2)%3)-TrDamp(0,j)-TrDamp(0,(j+1)%3))+c2*(TrDamp(1,(j+2)%3)-TrDamp(1,j)-TrDamp(1,(j+1)%3)))*dval2;
+					}		
 				}
 			}
 			dval3=2*(EN.row(3*i+((j+2)%3))-EN.row(3*i+((j+1)%3))); // <n3-n2,dv1>, <n3-n3,dv2>
 			FF2.row(F(i,j))+= 2*pow(t,3)*(c1*(Tr(0,j)-Tr(0,(j+1)%3)-Tr(0,(j+2)%3))+c2*(Tr(1,j)-Tr(1,(j+1)%3)-Tr(1,(j+2)%3)))*dval3;// dQ(j)(dV(j))
 			FF2.row(F(i,(j+1)%3))+= -2*pow(t,3)*(c1*(Tr(0,j)-Tr(0,(j+1)%3)-Tr(0,(j+2)%3))+c2*(Tr(1,j)-Tr(1,(j+1)%3)-Tr(1,(j+2)%3)))*dval3;//dQ(j)(dV(j+1))
+               		if(DampingForce_Enabled && tcount >0){
+				FDamp2.row(F(i,j))+= 2*pow(t,3)*(c1*(TrDamp(0,j)-TrDamp(0,(j+1)%3)-TrDamp(0,(j+2)%3))+c2*(TrDamp(1,j)-TrDamp(1,(j+1)%3)-TrDamp(1,(j+2)%3)))*dval3;// dQ(j)(dV(j))
+				FDamp2.row(F(i,(j+1)%3))+= -2*pow(t,3)*(c1*(TrDamp(0,j)-TrDamp(0,(j+1)%3)-TrDamp(0,(j+2)%3))+c2*(TrDamp(1,j)-TrDamp(1,(j+1)%3)-TrDamp(1,(j+2)%3)))*dval3;//dQ(j)(dV(j+1))
+			}
 		}
+		Matrix2d ADamp;
+		ADamp = Inv*(IA-IAold.block(2*i,0,2,2));
 		for (int j=0; j<3; j++){
 			for(int k=0; k<3; k++){
 				tmp=Inv*dI.block(6*j+2*k,0,2,2);
 				FF1(F(i,j),k)+=-6*t*(c1*A.trace()*tmp.trace()+c2*(A*tmp).trace()); // Force due to the fisrt fundamental term
-		
+               			if(DampingForce_Enabled && tcount >0){
+					FDamp1(F(i,j),k)+=-6*t*(c1*ADamp.trace()*tmp.trace()+c2*(ADamp*tmp).trace()); // Damping force for the streching energy
+				}
                 /*if((A*tmp).trace()>0.000001){
 		cout << "Vertex " << F(i,j) << " " << k << " direction" << endl << "tcount " << tcount << endl;
 	        cout << "A " << endl << A << endl << "Inv" << endl << Inv << endl;
@@ -373,31 +405,51 @@ MatrixXd Force(){
                 
 			}	
 		}
-               //cout << FF1 << endl << FF2 << endl;
+		/*
                //Calculate Damping Force 
                if(DampingForce_Enabled && tcount >0){
-		Matrix2d ADamp;
+		Matrix2d ADamp, BDamp;
 		ADamp = Inv*(IA-IAold.block(2*i,0,2,2));
+		BDamp = Inv*(IB-IBold.block(2*i,0,2,2));
 		for (int j=0; j<3; j++){
 			for(int k=0; k<3; k++){
+				// Fdamp1 is for Damping force due to stretching
 				tmp=Inv*dI.block(6*j+2*k,0,2,2);
-		// FDamp should be divived by delt since it is related to the strain rate, however we absorb the term into cdamp
-				FDamp(F(i,j),k)+=-6*t*cdamp*(c1*ADamp.trace()*tmp.trace()+c2*(ADamp*tmp).trace()); // Damping force for the streching energy
+				FDamp1(F(i,j),k)+=-6*t*(c1*ADamp.trace()*tmp.trace()+c2*(ADamp*tmp).trace()); // Damping force for the streching energy
+				// Fdamp1 is for Damping force due to stretching
 			}	
 		}
+		Tr << BDamp.trace()*(Inv*CanonM1).trace(), BDamp.trace()*(Inv*CanonM2).trace(), BDamp.trace()*(Inv*CanonM3).trace(), (BDamp*Inv*CanonM1).trace(), (BDamp*Inv*CanonM2).trace(), (BDamp*Inv*CanonM3).trace();
+		for (int j=0; j<3; j++){
+			for (int k=0; k<4; k++){
+				if (EdgeNV(3*i+j,k)!=-1){
+					dval1=2*Ed.row((j+1)%3)*dN.block(9*i+3*j,3*k,3,3);	// orginate from the term 2<dn(j),e(j+1)>, dn(j)(dV(EdgeNV(j,k)))
+					dval2=-2*Ed.row((j+2)%3)*dN.block(9*i+3*j,3*k,3,3); // originate form the term -2<dn(j),e(j-1)>
+					FDamp2.row(EdgeNV(3*i+j,k))+= -2*pow(t,3)*(c1*(Tr(0,(j+1)%3)-Tr(0,j)-Tr(0,(j+2)%3))+c2*(Tr(1,(j+1)%3)-Tr(1,j)-Tr(1,(j+2)%3)))*dval1;
+					FDamp2.row(EdgeNV(3*i+j,k))+= -2*pow(t,3)*(c1*(Tr(0,(j+2)%3)-Tr(0,j)-Tr(0,(j+1)%3))+c2*(Tr(1,(j+2)%3)-Tr(1,j)-Tr(1,(j+1)%3)))*dval2;
+				}
+			}
+			dval3=2*(EN.row(3*i+((j+2)%3))-EN.row(3*i+((j+1)%3))); // <n3-n2,dv1>, <n3-n3,dv2>
+			FDamp2.row(F(i,j))+= 2*pow(t,3)*(c1*(Tr(0,j)-Tr(0,(j+1)%3)-Tr(0,(j+2)%3))+c2*(Tr(1,j)-Tr(1,(j+1)%3)-Tr(1,(j+2)%3)))*dval3;// dQ(j)(dV(j))
+			FDamp2.row(F(i,(j+1)%3))+= -2*pow(t,3)*(c1*(Tr(0,j)-Tr(0,(j+1)%3)-Tr(0,(j+2)%3))+c2*(Tr(1,j)-Tr(1,(j+1)%3)-Tr(1,(j+2)%3)))*dval3;//dQ(j)(dV(j+1))
+		}
+		// FDamp should be divived by delt since it is related to the strain rate, however we absorb the term into cdamp
 	       }
+		*/
 		IAold.block(2*i,0,2,2)=IA;
+		IBold.block(2*i,0,2,2)=IB;
 	}
 	C=-1/(8*area*area);
 	FF2=-C*FF2;
+	//FDamp1 *= cdamp1;
+	FDamp2 *= cdamp2*-C;
 	//TODO: Check the direction of FDamp
-        FF = FF1+FF2-FDamp;
-	/* Output force for testing
-        cout << "FF1" << endl << FF1 << endl;
-        cout << "FF2" << endl << FF2 << endl;
-	cout << "FDamp" << endl << -FDamp << endl;
-        cout << "FF" << endl << FF << endl;
-	*/
+        FF = FF1+FF2+FDamp1+FDamp2;
+	 //Output force for testing
+        //cout << tcount << endl << "FF1" << endl << FF1 << endl;
+	//cout << "FDamp1" << endl << FDamp1 << endl;
+        //cout << "FF2" << endl << FF2 << endl;
+        //cout << "Fdamp2" << endl << FDamp2 << endl;
         
 	return FF;
 }
